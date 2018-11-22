@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title_hotspot_item_threepic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我测试一"
+                android:ellipsize="end"
+                android:textSize="16sp"
+                android:maxLines="2"
+                android:textColor="#6d6868"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <ImageView
+                android:id="@+id/img_hotspot_item_threepic1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="70dp"
+                android:src="@drawable/zwt"/>
+            <ImageView
+                android:id="@+id/img_hotspot_item_threepic2"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="70dp"
+                android:src="@drawable/zwt"/>
+            <ImageView
+                android:id="@+id/img_hotspot_item_threepic3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="70dp"
+                android:src="@drawable/zwt"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/from_hotspot_item_threepic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="腾讯网" />
+            <TextView
+                android:id="@+id/time_hotspot_item_threepic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:layout_marginLeft="20dp"
+                android:text="09-18" />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

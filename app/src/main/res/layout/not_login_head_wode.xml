@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true">
+
+    <Button
+        android:id="@+id/login_btn_wode"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_height="30dp"
+        android:textColor="#fff"
+        android:text="登录/注册"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:background="@drawable/login_bg" />
+
+</RelativeLayout>
