@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import android.os.*;
 
-public class UpdateNewsService extends Service{
+public class UpdateService extends Service{
     static long delayedMills = 60*60*1000;
     private FileUnit fileUnit ;
     private List<NewsBean> newsBeanList = new ArrayList<>();
@@ -61,19 +61,7 @@ public class UpdateNewsService extends Service{
     public void onCreate() {
         super.onCreate( );
         fileUnit = new FileUnit(getApplicationContext());
-        Log.e("aaa","我活着啊！");
-        CS();
         executeNetListen();
-    }
-
-    private void CS(){
-        new Handler().postDelayed(new Runnable( ) {
-            @Override
-            public void run() {
-                Log.e("Service","我还活着");
-                CS();
-            }
-        },5000);
     }
 
     private void executeNetListen(){
@@ -91,7 +79,6 @@ public class UpdateNewsService extends Service{
     @Override
     public void onDestroy() {
         super.onDestroy( );
-        Log.e("aaa","我死了a！");
     }
 
     public void request_hotSpot(String mUrl, Handler handler){

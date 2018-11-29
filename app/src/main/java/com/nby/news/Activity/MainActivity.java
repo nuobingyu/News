@@ -1,21 +1,15 @@
 package com.nby.news.Activity;
 
-import android.app.ActivityManager;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
 
-import com.bumptech.glide.Glide;
 import com.nby.news.Adapter.MainViewPagerAdapter;
 import com.nby.news.R;
-import com.nby.news.Service.UpdateNewsService;
-
-import org.jsoup.Jsoup;
+import com.nby.news.Service.UpdateService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,10 +22,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.e("aaa","我活了！");
-        Intent intent = new Intent(MainActivity.this, UpdateNewsService.class);
+        Intent intent = new Intent(MainActivity.this, UpdateService.class);
         startService(intent);
-        isServiceRunning();
         //控件初始化
         tabLayout_bottom = findViewById(R.id.bottom_tabLayout);
         viewPager = findViewById(R.id.main_viewpager);
@@ -77,24 +69,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private boolean isServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if ("com.example.MyService".equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void intentSearchActivity(View view){
         Intent intent = new Intent(MainActivity.this,SearchActivity.class);
         startActivity(intent);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy( );
-        Log.e("aaa","我死了！");
-    }
+
 }

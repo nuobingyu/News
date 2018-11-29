@@ -18,13 +18,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.nby.news.Bean.AddressBean;
 import com.nby.news.Bean.User;
 import com.nby.news.Bean.Weather;
 import com.nby.news.I_interface.IGetWeather;
@@ -39,35 +39,17 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class WodeFragment extends Fragment{
+public class MyFragment extends Fragment{
     private Button loginButton;
-    private String address; //完整地址
-    private  String country; //国家
-    private String province;  //省市
-    private String city ;    //获取城市
-    private String district  ;   //获取区县
-    private String street ;   //街道
+    private AddressBean address;
     private User mUser;
     private FrameLayout frameLayout;
     private TextView weatherToday,weatherCk,userName,AdressText;
     private ImageView userImg;
-    private Weather mWeather = new Weather();
-
-    public static final String[] permissions= new String[]{
-            "android.permission.ACCESS_COARSE_LOCATION",
-            "android.permission.ACCESS_FINE_LOCATION",
-            "android.permission.ACCESS_WIFI_STATE",
-            "android.permission.ACCESS_NETWORK_STATE",
-            "android.permission.CHANGE_WIFI_STATE",
-            "android.permission.READ_PHONE_STATE",
-            "android.permission.WRITE_EXTERNAL_STORAGE",
-            "android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-    };
-    //-------------------------------------------------------------------------
+    private Weather mWeather;
     public LocationClient mLocationClient = null;
-    private MyLocationListener myListener = new MyLocationListener();
-    LocationClientOption option = new LocationClientOption();
-    //-------------------------------------------------------------------------
+    public MyLocationListener myListener = new MyLocationListener();
+    public LocationClientOption option = new LocationClientOption();
     private View mLoginView;
     private boolean isLoadWeather = false;
     @SuppressLint("HandlerLeak")
@@ -75,7 +57,7 @@ public class WodeFragment extends Fragment{
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case 101:
+                case 10001:
                     if(!isLoadWeather){
                         isLoadWeather = true;
                         requestWeatherAPI();
@@ -87,10 +69,11 @@ public class WodeFragment extends Fragment{
                         return;
                     }
                     frameLayout.removeAllViews();
-                    View view = LayoutInflater.from(getContext()).inflate(R.layout.logined_head_wode,null);
+                    View view = LayoutInflater
+                            .from(getContext())
+                            .inflate(R.layout.logined_head_wode,null);
                     frameLayout.addView(view);
-                    reInitWode(view);
-
+                    reInitMyFragment(view);
                     break;
             }
         }
@@ -98,7 +81,7 @@ public class WodeFragment extends Fragment{
 
 
     @SuppressLint("SetTextI18n")
-    public void reInitWode(View view){
+    public void reInitMyFragment(View view){
         userName = view.findViewById(R.id.user_name_text);
         userImg = view.findViewById(R.id.user_tx);
         userName.setText(mUser.getUserName());
@@ -106,8 +89,9 @@ public class WodeFragment extends Fragment{
         weatherToday = view.findViewById(R.id.weather_jr);
         weatherCk = view.findViewById(R.id.weather_ck);
 
-        if(mWeather != null && !mWeather.getTemperature().equals("")){
-            AdressText.setText(address);
+        if(mWeather != null && mWeather.getTemperature()!=null
+                &&! address.getAddress().equals("")){
+            AdressText.setText(address.getAddress());
             weatherToday.setText(mWeather.getWeatherStr()+" "
                     +mWeather.getTemperature()+" "
                     +mWeather.getWind());
@@ -121,6 +105,9 @@ public class WodeFragment extends Fragment{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mWeather = new Weather();
+        address = new AddressBean();
+
         if(Build.VERSION.SDK_INT >= 24){
             int check = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
             if(check == PackageManager.PERMISSION_GRANTED){
@@ -137,19 +124,19 @@ public class WodeFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wode_layout,container ,false);
         frameLayout = view.findViewById(R.id.wode_frame);
-        View view1 = LayoutInflater.from(getContext()).inflate(R.layout.activity_main,null,false);
-        View view2 = view1.findViewById(R.id.top_main_view);
+        View topMainView = LayoutInflater.from(getContext()).inflate(R.layout.activity_main,null,false);
+        View view1 = topMainView.findViewById(R.id.top_main_view);
         loginButton = view.findViewById(R.id.login_btn_wode);
+
         loginButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 LoginPopWindow loginPopWindow = new LoginPopWindow(getContext(),mHanlder);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    loginPopWindow.showAsDropDown(view2);
+                    loginPopWindow.showAsDropDown(view1);
                 }
             }
         });
-
         return view;
     }
 
@@ -157,7 +144,7 @@ public class WodeFragment extends Fragment{
         //BDAbstractLocationListener为7.2版本新增的Abstract类型的监听接口
         //原有BDLocationListener接口暂时同步保留。具体介绍请参考后文中的说明
         //声明LocationClient类
-        mLocationClient = new LocationClient(Objects.requireNonNull(getActivity( )).getApplicationContext());
+        mLocationClient = new LocationClient(Objects.requireNonNull(getActivity()).getApplicationContext());
         //注册监听函数
         mLocationClient.registerLocationListener(myListener);
 
@@ -202,6 +189,7 @@ public class WodeFragment extends Fragment{
         mLocationClient.start();
     }
 
+    //进行网路请求，获取天气api返回的数据
     public void requestWeatherAPI(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://v.juhe.cn/")
@@ -209,7 +197,7 @@ public class WodeFragment extends Fragment{
                 .build();
 
         final IGetWeather request = retrofit.create(IGetWeather.class);
-        Call<Weather> call = request.getWeatherData(city,"json"
+        Call<Weather> call = request.getWeatherData(address.getCity(),"json"
                 ,1,"82be4d603e75b19c337b57d30b319951");
         call.enqueue(new Callback<Weather>( ) {
             @Override
@@ -218,33 +206,29 @@ public class WodeFragment extends Fragment{
                 mWeather = response.body();
                 mHanlder.sendEmptyMessage(12580);
             }
-
             @Override
             public void onFailure(Call<Weather> call, Throwable t) {
-
+                Log.e("onFailure",""+t.getMessage());
             }
         });
     }
 
     public class MyLocationListener extends BDAbstractLocationListener {
+        //定位成功回调方法
         @Override
         public void onReceiveLocation(BDLocation location) {
             //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
             //以下只列举部分获取地址相关的结果信息
             //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
-            Log.e("aaa","路过这里....");
-            address = location.getAddrStr();    //获取详细地址信息
-            country = location.getCountry();    //获取国家
-            province = location.getProvince();    //获取省份
-            city = location.getCity();    //获取城市
-            district = location.getDistrict();    //获取区县
-            street = location.getStreet();    //获取街道信息
-
-            if(address == null){
-                return;
-            }else{
-                mHanlder.sendEmptyMessage(101);
-                Log.e("address",address);
+            address.setAddress(location.getAddrStr());    //获取详细地址信息
+            address.setCountry(location.getCountry());    //获取国家
+            address.setProvince(location.getProvince());  //获取省份
+            address.setCity(location.getCity());          //获取城市
+            address.setDistrict(location.getDistrict());  //获取区县
+            address.setStreet(location.getStreet());      //获取街道信息
+            if(address != null && address.getAddress()!=null){
+                mHanlder.sendEmptyMessage(10001);
+                Log.e("address",address.getAddress());
             }
         }
     }

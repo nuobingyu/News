@@ -49,7 +49,7 @@
         <activity android:name=".Activity.SearchActivity"/>
         <activity android:name=".Activity.ShowNewsContentActivity"/>
 
-        <service android:name=".Service.UpdateNewsService"
+        <service android:name=".Service.UpdateService"
             android:enabled="true"
             android:exported="true"/>
         <service

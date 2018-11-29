@@ -1,5 +1,6 @@
 package com.nby.news.Fragment;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.nby.news.Activity.ShowNewsContentActivity;
 import com.nby.news.I_interface.OnItemClickListener;
 import com.nby.news.R;
 import com.nby.news.Bean.VideoBean;
@@ -76,6 +78,10 @@ public class VideoFragment extends Fragment implements CompoundButton.OnCheckedC
                 //点击视频播放操作
                 Toast.makeText(getContext(),videoBeanList.get(position).getVideo_link()
                         ,Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), ShowNewsContentActivity.class);
+                intent.putExtra("NewsUrl",videoBeanList.get(position).getVideo_link());
+                intent.putExtra("tag","2");
+                startActivity(intent);
             }
         };
         videoRecyclerViewAdapter = new VideoRecyclerViewAdapter(videoBeanList ,getContext(),onItemClickListener);

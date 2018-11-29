@@ -93,7 +93,7 @@ public class HotSpotFragment extends Fragment{
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getActivity() , ShowNewsContentActivity.class);
-                intent.putExtra("newsBean",newsBeanList.get(position) ); //跳转并传递新闻的Url
+                intent.putExtra("NewsUrl",newsBeanList.get(position).getUrl() ); //跳转并传递新闻的Url
                 startActivity(intent);
             }
         });

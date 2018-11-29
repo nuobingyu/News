@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.nby.news.Fragment.HomeFragment;
 import com.nby.news.Fragment.VideoFragment;
-import com.nby.news.Fragment.WodeFragment;
+import com.nby.news.Fragment.MyFragment;
 
 public class MainViewPagerAdapter extends FragmentPagerAdapter{
     private Context mContext;
@@ -27,7 +27,7 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter{
             case 1:
                 return new VideoFragment();
             case 2:
-                return new WodeFragment();
+                return new MyFragment();
         }
         return null;
     }

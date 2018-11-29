@@ -26,7 +26,9 @@ public class Weather {
     }
 
     public String getTemperature() {
-        return result.today.temperature;
+        if(result !=null &&result.today.temperature!=null)
+            return result.today.temperature;
+        return null;
     }
 
     public String getWeatherStr() {

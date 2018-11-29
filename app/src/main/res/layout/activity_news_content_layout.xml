@@ -1,128 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="10dp">
+    android:orientation="vertical"
+    android:layout_marginTop="25dp">
 
-    <ScrollView
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+    <WebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fadingEdge="none"
-        android:overScrollMode="never">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:background="#fff"/>
+        android:layout_height="match_parent"/>
 
-                <TextView
-                    android:id="@+id/news_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:textColor="#000"
-                    android:text="这里是新闻标题"/>
-
-                <LinearLayout
-                    android:id="@+id/news_content_body"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp">
-                        <TextView
-                            android:id="@+id/news_content_from"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="12sp"
-                            android:text=" "/>
-                        <TextView
-                            android:id="@+id/news_content_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="12sp"
-                            android:layout_marginLeft="30dp"
-                            android:text=" "/>
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:text="热门跟帖"/>
-                    <RelativeLayout
-                        android:id="@+id/news_content_recyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-            </LinearLayout>
-    </ScrollView>
-
-    <LinearLayout
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:background="@drawable/news_content_bottom_bg">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#cbcaca"/>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <EditText
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:background="@drawable/search_white"/>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:orientation="horizontal"
-                android:layout_weight="1"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/pinglun_news"/>
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/shoucang_off"/>
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/share_news"/>
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-</RelativeLayout>
+</LinearLayout>
