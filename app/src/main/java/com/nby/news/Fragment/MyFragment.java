@@ -25,7 +25,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.nby.news.Bean.AddressBean;
-import com.nby.news.Bean.User;
+import com.nby.news.Bean.UserBean;
 import com.nby.news.Bean.Weather;
 import com.nby.news.I_interface.IGetWeather;
 import com.nby.news.R;
@@ -42,7 +42,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MyFragment extends Fragment{
     private Button loginButton;
     private AddressBean address;
-    private User mUser;
+    private UserBean mUser;
     private FrameLayout frameLayout;
     private TextView weatherToday,weatherCk,userName,AdressText;
     private ImageView userImg;
@@ -58,13 +58,11 @@ public class MyFragment extends Fragment{
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 10001:
-                    if(!isLoadWeather){
-                        isLoadWeather = true;
-                        requestWeatherAPI();
-                    }
+                    requestWeatherAPI();
+                    mLocationClient.stop();
                     break;
                 case 12580:
-                    mUser = (User) msg.obj;
+                    mUser = (UserBean) msg.obj;
                     if(mUser == null || mUser.getUserName().equals("")){
                         return;
                     }
@@ -111,7 +109,7 @@ public class MyFragment extends Fragment{
         if(Build.VERSION.SDK_INT >= 24){
             int check = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
             if(check == PackageManager.PERMISSION_GRANTED){
-                init_BD();
+                initLBS();
             }else{
                 ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity( ))
                         ,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},2);
@@ -133,14 +131,14 @@ public class MyFragment extends Fragment{
             public void onClick(View v) {
                 LoginPopWindow loginPopWindow = new LoginPopWindow(getContext(),mHanlder);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    loginPopWindow.showAsDropDown(view1);
+                    loginPopWindow.showAsDropDown(view);
                 }
             }
         });
         return view;
     }
 
-    private void init_BD(){
+    private void initLBS(){
         //BDAbstractLocationListener为7.2版本新增的Abstract类型的监听接口
         //原有BDLocationListener接口暂时同步保留。具体介绍请参考后文中的说明
         //声明LocationClient类
@@ -189,7 +187,7 @@ public class MyFragment extends Fragment{
         mLocationClient.start();
     }
 
-    //进行网路请求，获取天气api返回的数据
+    //进行网络请求，获取天气api返回的数据
     public void requestWeatherAPI(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://v.juhe.cn/")

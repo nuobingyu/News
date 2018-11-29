@@ -1,7 +1,6 @@
 package com.nby.news.View;
 
 import android.app.Activity;
-import android.app.Notification;
 import android.content.Context;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -18,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.nby.news.Bean.User;
+import com.nby.news.Bean.UserBean;
 import com.nby.news.R;
 import android.os.Handler;
 
@@ -133,7 +132,7 @@ public class LoginPopWindow extends PopupWindow{
                     dismiss();
                     Message msg = Message.obtain();
                     msg.what = 12580;
-                    msg.obj = new User("诺冰羽");
+                    msg.obj = new UserBean("诺冰羽");
                     mHandler.sendMessage(msg);
                 }else{
                     Toast.makeText(mContext, "密码和用户名不匹配！", Toast.LENGTH_SHORT).show( );

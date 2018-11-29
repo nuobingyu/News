@@ -57,10 +57,10 @@ public class HotSpotFragment extends Fragment{
                     for(int i = size+19 ; i>=size; i--){
                         newsBeanList.add(newsList.get(i));
                     }
-                    for(int i = 0 ;i< newsBeanList.size(); i++){
-                        NewsBean newsBean = newsBeanList.get(i);
-                        fileUnit.appendToTempFile(newsBean);
-                    }
+//                    for(int i = 0 ;i< newsBeanList.size(); i++){
+//                        NewsBean newsBean = newsBeanList.get(i);
+//                        fileUnit.appendToTempFile(newsBean);
+//                    }
                     hotSpotListAdapter.notifyDataSetChanged();
                     break;
                 case 1002:
@@ -74,12 +74,8 @@ public class HotSpotFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_hotspot_layout,container ,false);
-        if(newsList==null){
-            Log.e("文件没有信息！"," ");
-            firstRequest(StringPool.URL_HOTSPOT);
-        }else{
-            Log.e("这是从文件获取的内容！"," ");
-        }
+        firstRequest(StringPool.URL_HOTSPOT);
+
         fileUnit = new FileUnit(getContext());
         recyclerView = view.findViewById(R.id.hotspot_list);
         refreshLayout = view.findViewById(R.id.hotspot_refresh);
@@ -99,7 +95,7 @@ public class HotSpotFragment extends Fragment{
         });
         recyclerView.setAdapter(hotSpotListAdapter);
         hotSpotListAdapter.notifyDataSetChanged();
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener( ) {
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh() {
                 int size = newsBeanList.size();
@@ -125,7 +121,6 @@ public class HotSpotFragment extends Fragment{
             @Override
             public void run() {
                 Document doc = null;
-
                 try {
                     doc = Jsoup.connect(mUrl).get( );
                 }catch (IOException e){

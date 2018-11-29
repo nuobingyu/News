@@ -15,15 +15,15 @@ import com.nby.news.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MillitaryRecyclerViewAdapter extends
-        RecyclerView.Adapter<MillitaryRecyclerViewAdapter.ViewHolder>{
+public class MilitaryRecyclerViewAdapter extends
+        RecyclerView.Adapter<MilitaryRecyclerViewAdapter.ViewHolder>{
 
     private List<NewsBean> dataList = new ArrayList<>();
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
 
-    public MillitaryRecyclerViewAdapter(Context context, List<NewsBean> list
-            ,OnItemClickListener onItemClickListener){
+    public MilitaryRecyclerViewAdapter(Context context, List<NewsBean> list
+            , OnItemClickListener onItemClickListener){
         mContext = context;
         dataList = list;
         mOnItemClickListener = onItemClickListener;
@@ -59,8 +59,8 @@ public class MillitaryRecyclerViewAdapter extends
         private TextView timeTextView;
         public ViewHolder(View itemView) {
             super(itemView);
-            titleTextView = itemView.findViewById(R.id.title_millitary);
-            timeTextView = itemView.findViewById(R.id.time_millitary);
+            titleTextView = itemView.findViewById(R.id.title_military);
+            timeTextView = itemView.findViewById(R.id.time_military);
         }
     }
 }

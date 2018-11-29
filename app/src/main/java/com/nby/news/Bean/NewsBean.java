@@ -12,7 +12,6 @@ public class NewsBean implements Serializable{
     public String object = "";
     public String pText = "";
     public List<String> imgUrls = new ArrayList<>();
-    public List<NewsContent> newsContents = new ArrayList<>();
 
     public NewsBean(){}
 
@@ -30,14 +29,6 @@ public class NewsBean implements Serializable{
 
     public void setImgUrls(List<String> imgUrls) {
         this.imgUrls = imgUrls;
-    }
-
-    public List<NewsContent> getNewsContents() {
-        return newsContents;
-    }
-
-    public void setNewsContents(List<NewsContent> newsContents) {
-        this.newsContents = newsContents;
     }
 
     public String getUrl() {

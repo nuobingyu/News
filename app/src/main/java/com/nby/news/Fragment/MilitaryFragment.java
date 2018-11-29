@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nby.news.Adapter.LBTViewPagerAdapter;
-import com.nby.news.Adapter.MillitaryRecyclerViewAdapter;
+import com.nby.news.Adapter.MilitaryRecyclerViewAdapter;
 import com.nby.news.Bean.NewsBean;
 import com.nby.news.I_interface.OnItemClickListener;
 import com.nby.news.R;
@@ -49,7 +49,7 @@ public class MilitaryFragment extends Fragment{
     private RecyclerView recyclerView;
     private SwipeRefreshLayout refreshLayout;
     private RecyclerView.LayoutManager layoutManager;
-    private MillitaryRecyclerViewAdapter millitaryRecyclerViewAdapter;
+    private MilitaryRecyclerViewAdapter millitaryRecyclerViewAdapter;
     private LBTViewPagerAdapter adapter;
     private ScheduledExecutorService scheduledExecutorService;
     private String[] titles = new String[3];
@@ -74,14 +74,14 @@ public class MilitaryFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_millitary_layout,container ,false);
+        View view = inflater.inflate(R.layout.fragment_military_layout,container ,false);
         init_lunbotu(view);
         getLunBoData(StringPool.URL_MILLITARY);
         requestData();
         recyclerView = view.findViewById(R.id.millitary_recycler);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        millitaryRecyclerViewAdapter = new MillitaryRecyclerViewAdapter(getContext( ),
+        millitaryRecyclerViewAdapter = new MilitaryRecyclerViewAdapter(getContext( ),
                 newsBeanList, new OnItemClickListener( ) {
             @Override
             public void onItemClick(View view, int position) {

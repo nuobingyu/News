@@ -1,22 +1,22 @@
 package com.nby.news.Bean;
 
-public class User {
+public class UserBean {
     private String userName;
     private String userImgeUrl;
     private String userSex;
 
-    public User(){}
+    public UserBean(){}
 
-    public User(String userName) {
+    public UserBean(String userName) {
         this.userName = userName;
     }
 
-    public User(String userName, String userImgeUrl) {
+    public UserBean(String userName, String userImgeUrl) {
         this.userName = userName;
         this.userImgeUrl = userImgeUrl;
     }
 
-    public User(String userName, String userImgeUrl, String userSex) {
+    public UserBean(String userName, String userImgeUrl, String userSex) {
         this.userName = userName;
         this.userImgeUrl = userImgeUrl;
         this.userSex = userSex;
