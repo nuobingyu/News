@@ -21,7 +21,7 @@ public class HomeViewPagerAdapter extends FragmentPagerAdapter{
     final int PAGE_COUNT = 5;
     private Context mContext;
 
-    private String[] tabTitles = {"热点","军事","国际","社会","音乐","生活"};
+    private String[] tabTitles = {"热点","军事","国际","社会","生活","生活"};
 
     public HomeViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);

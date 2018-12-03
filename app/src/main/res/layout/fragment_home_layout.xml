@@ -23,6 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="请输入您要搜索的关键字"
+                android:textSize="14sp"
                 android:onClick="intentSearchActivity"
                 android:gravity="center_vertical"
                 android:paddingLeft="10dp"
@@ -57,7 +58,7 @@
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:src="@drawable/my_tag"
+                android:src="@drawable/ic_mytag"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_alignParentRight="true"

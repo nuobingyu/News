@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 
 import com.nby.news.Bean.NewsBean;
 import com.nby.news.Adapter.HotSpotListAdapter;
-import com.nby.news.I_interface.OnItemClickListener;
+import com.nby.news.Interface.OnItemClickListener;
 import com.nby.news.R;
 import com.nby.news.Activity.ShowNewsContentActivity;
 import com.nby.news.StringPool;
@@ -75,16 +75,11 @@ public class HotSpotFragment extends Fragment{
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_hotspot_layout,container ,false);
         firstRequest(StringPool.URL_HOTSPOT);
-
         fileUnit = new FileUnit(getContext());
         recyclerView = view.findViewById(R.id.hotspot_list);
         refreshLayout = view.findViewById(R.id.hotspot_refresh);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        newsList.addAll(fileUnit.readFromTempFile());
-        for(int i = 0 ;i< 20 ;i++){
-            newsBeanList.add(newsList.get(i));
-        }
         hotSpotListAdapter = new HotSpotListAdapter(getContext( ),newsBeanList ,new OnItemClickListener( ) {
             @Override
             public void onItemClick(View view, int position) {
@@ -140,7 +135,7 @@ public class HotSpotFragment extends Fragment{
                                     if(!imgUrl.contains("https://")){
                                         imgUrl = "http:"+imgUrl;
                                     }
-                                    Log.e("新闻pic", imgUrl);
+                                  //  Log.e("新闻pic", imgUrl);
                                     newsBean.imgUrls.add(imgUrl);
                                 }
                             }
@@ -148,12 +143,13 @@ public class HotSpotFragment extends Fragment{
                             for (Element link : links) {
                                 String linkStr =  link.attr("href");
                                 newsBean.url = linkStr;
-                                Log.e("新闻link（正文链接）",linkStr);
+                           //     Log.e("新闻link（正文链接）",linkStr);
                                 String title = link.text();
                                 newsBean.title = title;
-                                Log.e("标题", title);
+                           //     Log.e("标题", title);
                             }
                             newsList.add(newsBean);
+                            fileUnit.appendToTempFile(newsBean);
                         }
                         Message msg = new Message();
                         msg.what= 1001;

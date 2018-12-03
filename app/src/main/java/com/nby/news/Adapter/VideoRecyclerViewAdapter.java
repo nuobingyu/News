@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.nby.news.I_interface.OnItemClickListener;
+import com.nby.news.Interface.OnItemClickListener;
 import com.nby.news.R;
 import com.nby.news.Bean.VideoBean;
 

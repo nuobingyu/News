@@ -5,11 +5,11 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:padding="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
             <TextView
                 android:id="@+id/title_hotspot_item_threepic"
                 android:layout_width="wrap_content"
@@ -19,7 +19,6 @@
                 android:textSize="16sp"
                 android:maxLines="2"
                 android:textColor="#6d6868"/>
-
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"

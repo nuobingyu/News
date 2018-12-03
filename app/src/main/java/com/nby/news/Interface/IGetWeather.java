@@ -1,4 +1,4 @@
-package com.nby.news.I_interface;
+package com.nby.news.Interface;
 
 import com.nby.news.Bean.Weather;
 

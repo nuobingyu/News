@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 
 import com.nby.news.Adapter.InternationalRecyclerViewAdapter;
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.I_interface.OnItemClickListener;
+import com.nby.news.Interface.OnItemClickListener;
 import com.nby.news.R;
 import com.nby.news.StringPool;
 
@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import android.os.*;
-import android.widget.GridLayout;
 import android.widget.Toast;
 
 public class InternationalFragment extends Fragment{
@@ -94,11 +93,11 @@ public class InternationalFragment extends Fragment{
                             newsBean.imgUrls.add(imgUrl);
                             newsBean.time = time;
                             newsBean.pText = p;
-                            Log.e("title",title);
-                            Log.e("link",link);
-                            Log.e("img", imgUrl);
-                            Log.e("time", time);
-                            Log.e("p", p);
+//                            Log.e("title",title);
+//                            Log.e("link",link);
+//                            Log.e("img", imgUrl);
+//                            Log.e("time", time);
+//                            Log.e("p", p);
                             newsBeanList.add(newsBean);
                         }else{
                             Log.e("小于7"," ");

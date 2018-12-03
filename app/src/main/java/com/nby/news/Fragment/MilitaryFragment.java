@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.nby.news.Adapter.LBTViewPagerAdapter;
 import com.nby.news.Adapter.MilitaryRecyclerViewAdapter;
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.I_interface.OnItemClickListener;
+import com.nby.news.Interface.OnItemClickListener;
 import com.nby.news.R;
 import com.nby.news.StringPool;
 
@@ -122,9 +122,9 @@ public class MilitaryFragment extends Fragment{
                             newsBean.url = link;
                             newsBean.time = time;
                             newsBeanList.add(newsBean);
-                            Log.e("title_a",title);
-                            Log.e("time_a",time);
-                            Log.e("link_a",link);
+//                            Log.e("title_a",title);
+//                            Log.e("time_a",time);
+//                            Log.e("link_a",link);
                         }
                     }
                 }
@@ -155,9 +155,9 @@ public class MilitaryFragment extends Fragment{
                         if(!imgUrl.contains("http:")){
                             imgUrl= "http:"+imgUrl;
                         }
-                        Log.e("M_link",link);
-                        Log.e("M_imgUrl",imgUrl);
-                        Log.e("M_title",title);
+//                        Log.e("M_link",link);
+//                        Log.e("M_imgUrl",imgUrl);
+//                        Log.e("M_title",title);
                         links[i] = link;
                         titles[i] = title;
                         imgUrls[i] = imgUrl;

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.I_interface.OnItemClickListener;
+import com.nby.news.Interface.OnItemClickListener;
 import com.nby.news.R;
 
 import java.util.ArrayList;

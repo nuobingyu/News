@@ -19,7 +19,7 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.nby.news.Activity.ShowNewsContentActivity;
-import com.nby.news.I_interface.OnItemClickListener;
+import com.nby.news.Interface.OnItemClickListener;
 import com.nby.news.R;
 import com.nby.news.Bean.VideoBean;
 import com.nby.news.Adapter.VideoRecyclerViewAdapter;
@@ -185,11 +185,11 @@ public class VideoFragment extends Fragment implements CompoundButton.OnCheckedC
                     for(Element item : list_item){
                         VideoBean videoBean = new VideoBean();
                         videoBean.setId(list_item.attr("data-id"));
-                        Log.e("id",videoBean.getId());
+                       // Log.e("id",videoBean.getId());
                         Elements content = item.getElementsByClass("figure_pic");
                         String title = content.attr("alt");
                         videoBean.setTitle(title);
-                        Log.e("标题",title);
+                      //  Log.e("标题",title);
                         String src = "";
                         src = content.attr("lz_next");
                         if(src.equals("")){
@@ -202,22 +202,22 @@ public class VideoFragment extends Fragment implements CompoundButton.OnCheckedC
                             continue;
                         }
                         videoBean.setImgUrl(src);
-                        Log.e("图片",src);
+                       // Log.e("图片",src);
                         String miaoShu = item.getElementsByClass("figure_count").text();
                         videoBean.setMiaoshu(miaoShu);
-                        Log.e("观看数",miaoShu);
+                       // Log.e("观看数",miaoShu);
                         String link = item.getElementsByClass("figure").attr("href");
                         if(link== null ||link.equals("")||link.length()<4)
                             continue;
                         videoBean.setVideo_link(link);
-                        Log.e("link",link);
+                       // Log.e("link",link);
                         videoDataList.add(videoBean);
                     }
                 }
 
                 Elements videos = doc.getElementsByClass("poplayer_quickplay");
                 for(Element e : videos){
-                    Log.e("aaa",e.html());
+                    //Log.e("aaa",e.html());
                 }
                 handler.sendEmptyMessage(1001);
             }
@@ -238,13 +238,13 @@ public class VideoFragment extends Fragment implements CompoundButton.OnCheckedC
                 for(Element e : elements){
                     Elements item = e.getElementsByClass("mod_player");
                     for(Element content: item){//txp_video_container
-                        Log.e("a",item.html());
+//                        Log.e("a",item.html());
                         Elements player = content.getElementsByClass("tenvideo_player");
                         for(Element element: player){
                             Elements source = element.getElementsByClass("txp_video_container");
-                            Log.e("视频源",source.attr("src"));
+//                            Log.e("视频源",source.attr("src"));
                         }
-                        Log.e("aaa",player.html());
+//                        Log.e("aaa",player.html());
                     }
                 }
             }

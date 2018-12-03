@@ -27,7 +27,7 @@ import com.baidu.location.LocationClientOption;
 import com.nby.news.Bean.AddressBean;
 import com.nby.news.Bean.UserBean;
 import com.nby.news.Bean.Weather;
-import com.nby.news.I_interface.IGetWeather;
+import com.nby.news.Interface.IGetWeather;
 import com.nby.news.R;
 import com.nby.news.View.LoginPopWindow;
 

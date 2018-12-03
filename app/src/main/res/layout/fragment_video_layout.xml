@@ -45,7 +45,7 @@
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:src="@drawable/my_tag"
+                android:src="@drawable/ic_mytag"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_alignParentRight="true"

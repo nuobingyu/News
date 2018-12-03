@@ -11,9 +11,26 @@ public class NewsBean implements Serializable{
     public String from = "";
     public String object = "";
     public String pText = "";
+    public String pic = "";
     public List<String> imgUrls = new ArrayList<>();
 
     public NewsBean(){}
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
+    }
+
+    public String getpText() {
+        return pText;
+    }
+
+    public void setpText(String pText) {
+        this.pText = pText;
+    }
 
     public String getObject() {
         return object;

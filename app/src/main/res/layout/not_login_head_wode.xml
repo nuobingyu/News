@@ -17,6 +17,6 @@
         android:gravity="center"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
-        android:background="@drawable/login_bg" />
+        android:background="@drawable/bg_login" />
 
 </RelativeLayout>

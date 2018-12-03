@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:background="@drawable/paopao_bg_orenge"
+        android:background="@drawable/bg_orenge"
         android:textColor="@color/app_main_color"
         android:text="分类"/>
     <CheckBox

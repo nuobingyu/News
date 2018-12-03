@@ -7,5 +7,8 @@
     <color name="black_color">#000</color>
     <color name="app_main_color">#e03f3f</color>
     <color name="mc_8000">#8000</color>
+    <color name="text_gray">#737373</color>
+    <color name="text_select">#ff5555</color>
+    <color name="bg_rad">#ff0000</color>
 
 </resources>

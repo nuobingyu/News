@@ -25,7 +25,7 @@
         android:layout_height="match_parent">
         <com.nby.news.View.MyCircleView
             android:id="@+id/user_tx"
-            android:src="@drawable/my_tag"
+            android:src="@drawable/ic_mytag"
             android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"
             android:layout_width="60dp"

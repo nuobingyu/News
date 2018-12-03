@@ -50,7 +50,7 @@ public class FileUnit {
                 return;
             }
             os.write(data.getBytes("UTF-8"));
-            Log.e("写数据进入内存",data);
+            //Log.e("写数据进入内存",data);
             os.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace( );
@@ -77,7 +77,7 @@ public class FileUnit {
 
             if(newsStrings.length!=0){
                 for(int i = 0 ; i< newsStrings.length; i++){
-                    Log.e("从内存读取到的内容",newsStrings[i]);
+                  //  Log.e("从内存读取到的内容",newsStrings[i]);
                     String[] news = newsStrings[i].split("==nby==");
                     if(news.length>0){
                         NewsBean newsBean = new NewsBean();
@@ -119,7 +119,7 @@ public class FileUnit {
                 return;
             }
             os.write(data.getBytes("UTF-8"));
-            Log.e("追加数据进入内存",data);
+            //Log.e("追加数据进入内存",data);
             os.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace( );
@@ -128,11 +128,11 @@ public class FileUnit {
         }
     }
 
-//    public void writeToDataFile(String data){
-//       dataFileName = mContext.getExternalCacheDir().getAbsolutePath()+ dataFileName;
-//    }
-//
-//    public String readToDataFile(){
-//        return "";
-//    }
+    public void clearAndDelectedFile(){
+        File file = new File(mContext.getExternalFilesDir(null).getAbsolutePath(),tempFileName);
+        if(file.exists()){
+            file.delete();
+        }
+    }
+
 }
