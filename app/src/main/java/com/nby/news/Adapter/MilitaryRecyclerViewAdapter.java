@@ -32,7 +32,7 @@ public class MilitaryRecyclerViewAdapter extends
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_millitary,parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_military,parent,false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }

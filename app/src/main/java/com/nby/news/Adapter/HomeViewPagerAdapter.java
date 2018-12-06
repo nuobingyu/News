@@ -11,7 +11,7 @@ import com.nby.news.Fragment.HotSpotFragment;
 import com.nby.news.Fragment.InternationalFragment;
 import com.nby.news.Fragment.LifeFragment;
 import com.nby.news.Fragment.MilitaryFragment;
-import com.nby.news.Fragment.MusicFragment;
+import com.nby.news.Fragment.CultureFragment;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class HomeViewPagerAdapter extends FragmentPagerAdapter{
     final int PAGE_COUNT = 5;
     private Context mContext;
 
-    private String[] tabTitles = {"热点","军事","国际","社会","生活","生活"};
+    private String[] tabTitles = {"热点","军事","国际","文化","生活"};
 
     public HomeViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -38,7 +38,7 @@ public class HomeViewPagerAdapter extends FragmentPagerAdapter{
             case 2:
                 return new InternationalFragment();
             case 3:
-                return new MusicFragment();
+                return new CultureFragment();
             case 4:
                 return new LifeFragment();
         }

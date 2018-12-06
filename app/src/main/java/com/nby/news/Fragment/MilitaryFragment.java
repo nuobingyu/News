@@ -1,6 +1,7 @@
 package com.nby.news.Fragment;
 
 import android.annotation.SuppressLint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,30 +9,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.nby.news.Adapter.LBTViewPagerAdapter;
-import com.nby.news.Adapter.MilitaryRecyclerViewAdapter;
+import com.nby.news.Adapter.MilitaryRevHorizontalAdapter;
+import com.nby.news.Adapter.MilitaryRevVerticalAdapter;
+import com.nby.news.Adapter.MilitaryViewPagerAdapter;
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.Interface.OnItemClickListener;
+import com.nby.news.Interface.IUpdateDate;
+import com.nby.news.model.MilitaryModel;
 import com.nby.news.R;
-import com.nby.news.StringPool;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -40,185 +33,46 @@ import java.util.concurrent.TimeUnit;
 
 public class MilitaryFragment extends Fragment{
 
-    private ViewPager mViewPager; //轮播图的viewPager
-    private List<ImageView> images; //
-    private List<View> dots; //
+    private ViewPager mViewPager;
+    private List<View> dots;
     private int currentItem; // 当前位置
     private int oldPosition = 0; // 上次的位置
     private TextView titleTextView;
-    private RecyclerView recyclerView;
-    private SwipeRefreshLayout refreshLayout;
-    private RecyclerView.LayoutManager layoutManager;
-    private MilitaryRecyclerViewAdapter millitaryRecyclerViewAdapter;
-    private LBTViewPagerAdapter adapter;
+    private NestedScrollView scrollView;
+    private RecyclerView recyclerView_horizontal;
+    private RecyclerView recyclerView_vertical;
+    private MilitaryRevHorizontalAdapter horizontalAdapter;
+    private MilitaryRevVerticalAdapter verticalAdapter;
     private ScheduledExecutorService scheduledExecutorService;
-    private String[] titles = new String[3];
-    private String[] links = new String[3];
-    private String[] imgUrls = new String[3];
-    private List<NewsBean> newsBeanList = new ArrayList<>();
+    private MilitaryModel model;
+    private MilitaryViewPagerAdapter pagerAdapter;
+    private List<NewsBean> pageDataList = new ArrayList<>();
+    private List<NewsBean> beanList_jx = new ArrayList<>();
+    private List<NewsBean> beanList_yw = new ArrayList<>();
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 1001:
-                    millitaryRecyclerViewAdapter.notifyDataSetChanged();
+                    pagerAdapter = new MilitaryViewPagerAdapter(getContext(),pageDataList);
+                    mViewPager.setAdapter(pagerAdapter);
+                    titleTextView.setText(pageDataList.get(0).getTitle());
                     break;
-                case 0:
+                case 1002:
+                    horizontalAdapter = new MilitaryRevHorizontalAdapter(getContext(),beanList_jx);
+                    recyclerView_horizontal.setAdapter(horizontalAdapter);
+                    break;
+                case 1003:
+                    verticalAdapter = new MilitaryRevVerticalAdapter(getContext(),beanList_yw);
+                    recyclerView_vertical.setAdapter(verticalAdapter);
+                    break;
+                case 1004:
                     mViewPager.setCurrentItem(currentItem);
                     break;
             }
         }
     };
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_military_layout,container ,false);
-        init_lunbotu(view);
-        getLunBoData(StringPool.URL_MILLITARY);
-        requestData();
-        recyclerView = view.findViewById(R.id.millitary_recycler);
-        layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-        millitaryRecyclerViewAdapter = new MilitaryRecyclerViewAdapter(getContext( ),
-                newsBeanList, new OnItemClickListener( ) {
-            @Override
-            public void onItemClick(View view, int position) {
-                Toast("您点击了："+newsBeanList.get(position).title
-                        +"，它的访问链接为："+newsBeanList.get(position).url);
-            }
-        });
-        recyclerView.setAdapter(millitaryRecyclerViewAdapter);
-        return view;
-    }
-
-    public void Toast(String s){
-        Toast.makeText(getContext(),s, Toast.LENGTH_SHORT).show();
-    }
-
-    private void requestData(){
-        new Thread(new Runnable( ) {
-            @Override
-            public void run() {
-                Document doc = null;
-                try {
-                    doc = Jsoup.connect("http://mil.news.sina.com.cn/roll/index.d.html?cid=57918").get();
-                } catch (IOException e) {
-                    e.printStackTrace( );
-                }
-                Elements elements = doc.getElementsByClass("fixList");
-                for(Element e :elements){
-                    Elements lists = e.getElementsByClass("linkNews");
-                    for(Element list: lists){
-                        Elements lis = list.getElementsByTag("li");
-                        for(Element li : lis){
-                            NewsBean newsBean = new NewsBean();
-                            String title = li.getElementsByTag("a").text();
-                            String link = li.getElementsByTag("a").attr("href");
-                            String time = li.getElementsByTag("span").text();
-                            time = time.substring(1,time.length()-1);
-                            newsBean.title = title;
-                            newsBean.url = link;
-                            newsBean.time = time;
-                            newsBeanList.add(newsBean);
-//                            Log.e("title_a",title);
-//                            Log.e("time_a",time);
-//                            Log.e("link_a",link);
-                        }
-                    }
-                }
-                mHandler.sendEmptyMessage(1001);
-            }
-        }).start();
-    }
-
-    public void getLunBoData(String mUrl){
-        new Thread(new Runnable( ) {
-            @Override
-            public void run() {
-                Document doc = null;
-                try {
-                    doc = Jsoup.connect(mUrl).get();
-                } catch (IOException e) {
-                    e.printStackTrace( );
-                }
-                assert doc != null;
-                Elements elements = doc.getElementsByClass("react-swipe-container");
-                for(Element e : elements){
-                    Elements items = e.getElementsByClass("focus-item");
-                    int i = 0 ;
-                    for(Element item : items){
-                        String link = item.attr("href");
-                        String imgUrl = item.getElementsByTag("img").attr("src");
-                        String title = item.getElementsByTag("h2").text();
-                        if(!imgUrl.contains("http:")){
-                            imgUrl= "http:"+imgUrl;
-                        }
-//                        Log.e("M_link",link);
-//                        Log.e("M_imgUrl",imgUrl);
-//                        Log.e("M_title",title);
-                        links[i] = link;
-                        titles[i] = title;
-                        imgUrls[i] = imgUrl;
-                        if(i==2){
-                            break;
-                        }
-                        i++;
-                    }
-                }
-            }
-        }).start();
-    }
-
-    private void init_lunbotu(View v){
-        titleTextView = v.findViewById(R.id.title);
-        titleTextView.setText(titles[0]);
-        mViewPager = v.findViewById(R.id.viewpager_lbt);
-
-        images = new ArrayList<>();
-        for(int i= 0 ; i< imgUrls.length;i++){
-            ImageView imageView = new ImageView(getContext());
-            images.add(imageView);
-        }
-        adapter = new LBTViewPagerAdapter(getContext(),images,imgUrls);
-        mViewPager.setAdapter(adapter);
-
-        dots = new ArrayList<>();
-        dots.add(v.findViewById(R.id.dot_0));
-        dots.add(v.findViewById(R.id.dot_1));
-        dots.add(v.findViewById(R.id.dot_2));
-
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener( ) {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                titleTextView.setText(titles[position]);
-                dots.get(position).setBackgroundResource(R.drawable.dot_focus);
-                dots.get(oldPosition).setBackgroundResource(R.drawable.dot );
-
-                oldPosition = position;
-                currentItem = position;
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-    }
-    class ViewPageTask implements Runnable{
-
-        @Override
-        public void run() {
-            currentItem = (currentItem +1) % imgUrls.length;
-            mHandler.sendEmptyMessage(0);
-        }
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -228,6 +82,93 @@ public class MilitaryFragment extends Fragment{
                 2,
                 2,
                 TimeUnit.SECONDS);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_military_layout,container ,false);
+        titleTextView = view.findViewById(R.id.military_vp_title);
+        mViewPager = view.findViewById(R.id.military_viewpager);
+        dots = new ArrayList<>();
+        dots.add(view.findViewById(R.id.dot_0));
+        dots.add(view.findViewById(R.id.dot_1));
+        dots.add(view.findViewById(R.id.dot_2));
+        model = new MilitaryModel();
+        model.requestViewPagerDate(new IUpdateDate( ) {
+            @Override
+            public void update(List<NewsBean> dataList) {
+                if(dataList.size()<3)
+                    return;
+                pageDataList = dataList;
+                mHandler.sendEmptyMessage(1001);
+            }
+        });
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener( ) {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                titleTextView.setText(pageDataList.get(position).getTitle());
+                dots.get(position).setBackgroundResource(R.drawable.dot_focus);
+                dots.get(oldPosition).setBackgroundResource(R.drawable.dot );
+
+                oldPosition = position;
+                currentItem = position;
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+        recyclerView_horizontal = view.findViewById(R.id.military_recycler_horizontal);
+        LinearLayoutManager layoutManager_ht = new LinearLayoutManager(getContext());
+        layoutManager_ht.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView_horizontal.setLayoutManager(layoutManager_ht);
+        recyclerView_horizontal.addItemDecoration(new RecyclerView.ItemDecoration( ) {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                //super.getItemOffsets(outRect, view, parent, state);
+                outRect.left = 10;
+            }
+        });
+        model.requestNews_JX(new IUpdateDate( ) {
+            @Override
+            public void update(List<NewsBean> dataList) {
+                beanList_jx = dataList;
+                mHandler.sendEmptyMessage(1002);
+            }
+        });
+        recyclerView_vertical = view.findViewById(R.id.military_recycler_vertical);
+        LinearLayoutManager layoutManager_vt = new LinearLayoutManager(getContext());
+        layoutManager_vt.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView_vertical.setLayoutManager(layoutManager_vt);
+        model.requestNews_YW(new IUpdateDate( ) {
+            @Override
+            public void update(List<NewsBean> dataList) {
+                beanList_yw = dataList;
+                mHandler.sendEmptyMessage(1003);
+            }
+        });
+        recyclerView_vertical.setNestedScrollingEnabled(false);
+        recyclerView_vertical.addItemDecoration(new RecyclerView.ItemDecoration( ) {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+//                super.getItemOffsets(outRect, view, parent, state);
+                outRect.top = 10;
+            }
+        });
+        scrollView = view.findViewById(R.id.military_scrollView);
+        return view;
+    }
+
+    class ViewPageTask implements Runnable{
+        @Override
+        public void run() {
+            currentItem = (currentItem +1) % pageDataList.size();
+            mHandler.sendEmptyMessage(1004);
+        }
     }
 
     @Override
