@@ -1,8 +1,6 @@
 package com.nby.news.View;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +17,8 @@ import android.widget.Toast;
 
 import com.nby.news.Bean.UserBean;
 import com.nby.news.R;
+import com.nby.news.model.WeatherModel;
+
 import android.os.Handler;
 
 public class LoginPopWindow extends PopupWindow{
@@ -26,33 +26,95 @@ public class LoginPopWindow extends PopupWindow{
     private View mView;
     private Context mContext;
     private FrameLayout frameLayout;
-    private Handler mHandler;
-    private TextView LoginText,ZhuCeText;
+    //private Handler mHandler;
+    private TextView loginText;
+    private TextView registerText;
+    private ImageView qq_img;
+    private ImageView wx_img;
+    private ImageView phoneLoginImg;
+    private EditText PassWordText, userIDText;
+    private Button loginButton;
+    private String passWord = "";
+    private String userID = "";
+    private ILoginStatusListener loginStatusListener;
+
+    public interface ILoginStatusListener{
+        void onSuccess(UserBean userBean);
+        void onFail(String errorString);
+    }
 
 
-    public LoginPopWindow(final Context context ,Handler handler ) {
+    public LoginPopWindow(final Context context , ILoginStatusListener iLoginStatusListener) {
         super(context);
         mContext = context;
-        mHandler = handler;
+        loginStatusListener = iLoginStatusListener;
 
         //初始化布局
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         assert inflater != null;
         mView = inflater.inflate(R.layout.view_popwindow_layout,null);
-        LoginText = mView.findViewById(R.id.login_popwindow);
-        ZhuCeText = mView.findViewById(R.id.zhuce_popwindow);
-        ZhuCeText.setOnClickListener(new View.OnClickListener( ) {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "注册无服务中！", Toast.LENGTH_SHORT).show( );
-            }
-        });
+        loginText = mView.findViewById(R.id.login_popwindow);
+        registerText = mView.findViewById(R.id.zhuce_popwindow);
         frameLayout = mView.findViewById(R.id.pop_frame);
         frameLayout.removeAllViews();
         View selectView = inflater.inflate(R.layout.view_login_select,null);
         frameLayout.addView(selectView);
-        init_select(mView);
+        qq_img = selectView.findViewById(R.id.qq_img);
+        wx_img = selectView.findViewById(R.id.wx_img);
+        phoneLoginImg = selectView.findViewById(R.id.phone_img);
+        registerText.setOnClickListener(new View.OnClickListener( ) {
+            @Override
+            public void onClick(View v) {
+                frameLayout.removeAllViews();
+                Toast.makeText(context, "注册无服务中！", Toast.LENGTH_SHORT).show( );
+            }
+        });
+        qq_img.setOnClickListener(new View.OnClickListener( ) {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "第三方登录正在授权检验中", Toast.LENGTH_SHORT).show( );
+            }
+        });
+        wx_img.setOnClickListener(new View.OnClickListener( ) {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "尚未开发", Toast.LENGTH_SHORT).show( );
+            }
+        });
+        phoneLoginImg.setOnClickListener(new View.OnClickListener( ) {
+            @Override
+            public void onClick(View v) {
+                frameLayout.removeAllViews();
+                View view = LayoutInflater.from(mContext).inflate(R.layout.view_login_phone,null);
+                frameLayout.addView(view);
+                PassWordText = view.findViewById(R.id.mima_edit);
+                userIDText = view.findViewById(R.id.user_edit);
+                loginButton = view.findViewById(R.id.login_btn);
+                loginButton.setOnClickListener(new View.OnClickListener( ) {
+                    @Override
+                    public void onClick(View v) {
+                       login();
+                    }
+                });
+            }
+        });
         init_popWindowSettings();
+    }
+
+    public void login(){
+        passWord = PassWordText.getText().toString();
+        userID = userIDText.getText().toString();
+        if(passWord.equals("") || userID.equals("")){
+            loginStatusListener.onFail("用户名和密码不能为空！");
+            Toast.makeText(mContext, "用户名和密码不能为空！", Toast.LENGTH_SHORT).show( );
+        }else if(passWord.equals("123456")&& userID.equals("123456")){
+            Toast.makeText(mContext, "登陆成功！", Toast.LENGTH_SHORT).show( );
+            dismiss();
+            loginStatusListener.onSuccess(new UserBean("诺冰羽"));
+        }else{
+            loginStatusListener.onFail("密码和用户名不匹配！");
+            Toast.makeText(mContext, "密码和用户名不匹配！", Toast.LENGTH_SHORT).show( );
+        }
     }
 
     public void init_popWindowSettings(){
@@ -74,80 +136,6 @@ public class LoginPopWindow extends PopupWindow{
             }
         });
         setContentView(mView);
-    }
-
-
-    private TextView loginTextView;
-    private TextView zhuCeTextView;
-    private ImageView qq_img;
-    private ImageView wx_img;
-    private ImageView phone_img;
-    public void init_select(View view){
-        loginTextView = view.findViewById(R.id.login_popwindow);
-        zhuCeTextView = view.findViewById(R.id.zhuce_popwindow);
-        qq_img = view.findViewById(R.id.qq_img);
-        qq_img.setOnClickListener(new View.OnClickListener( ) {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, "第三方登录正在授权检验中", Toast.LENGTH_SHORT).show( );
-            }
-        });
-        wx_img = view.findViewById(R.id.wx_img);
-        wx_img.setOnClickListener(new View.OnClickListener( ) {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, "尚未开发", Toast.LENGTH_SHORT).show( );
-            }
-        });
-        phone_img = view.findViewById(R.id.phone_img);
-        phone_img.setOnClickListener(new View.OnClickListener( ) {
-            @Override
-            public void onClick(View v) {
-                frameLayout.removeAllViews();
-                View view = LayoutInflater.from(mContext).inflate(R.layout.view_login,null);
-                frameLayout.addView(view);
-                init_loginView(view);
-            }
-        });
-    }
-
-
-    private EditText mimaEditText, userEditText;
-    private Button loginButton;
-    private String mimaStr = "";
-    private String userStr = "";
-    public void init_loginView(View view){
-        mimaEditText = view.findViewById(R.id.mima_edit);
-        userEditText = view.findViewById(R.id.user_edit);
-        loginButton = view.findViewById(R.id.login_btn);
-        loginButton.setOnClickListener(new View.OnClickListener( ) {
-            @Override
-            public void onClick(View v) {
-                mimaStr = mimaEditText.getText().toString();
-                userStr = userEditText.getText().toString();
-                if(mimaStr.equals("") || userStr.equals("")){
-                    Toast.makeText(mContext, "用户名和密码不能为空！", Toast.LENGTH_SHORT).show( );
-                }else if(mimaStr.equals("123456")&&userStr.equals("123456")){
-                    Toast.makeText(mContext, "登陆成功！", Toast.LENGTH_SHORT).show( );
-                    dismiss();
-                    Message msg = Message.obtain();
-                    msg.what = 12580;
-                    msg.obj = new UserBean("诺冰羽");
-                    mHandler.sendMessage(msg);
-                }else{
-                    Toast.makeText(mContext, "密码和用户名不匹配！", Toast.LENGTH_SHORT).show( );
-                }
-            }
-        });
-    }
-
-
-    public static void setBackgroundAlpha(float bgAlpha, Context mContext) {
-        WindowManager.LayoutParams lp = ((Activity) mContext).getWindow()
-                .getAttributes();
-        lp.alpha = bgAlpha;
-        ((Activity) mContext).getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        ((Activity) mContext).getWindow().setAttributes(lp);
     }
 
     @Override

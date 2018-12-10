@@ -2,10 +2,10 @@ package com.nby.news.Fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.*;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
@@ -27,94 +28,78 @@ import com.baidu.location.LocationClientOption;
 import com.nby.news.Bean.AddressBean;
 import com.nby.news.Bean.UserBean;
 import com.nby.news.Bean.Weather;
-import com.nby.news.Interface.IGetWeather;
 import com.nby.news.R;
 import com.nby.news.View.LoginPopWindow;
+import com.nby.news.model.WeatherModel;
 
 import java.util.Objects;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class MyFragment extends Fragment{
+    private Context mContext;
     private Button loginButton;
     private AddressBean address;
     private UserBean mUser;
     private FrameLayout frameLayout;
-    private TextView weatherToday,weatherCk,userName,AdressText;
+    private TextView weatherToday,weatherCk,userName, AddressText;
     private ImageView userImg;
     private Weather mWeather;
+    private WeatherModel weatherModel;
     public LocationClient mLocationClient = null;
     public MyLocationListener myListener = new MyLocationListener();
     public LocationClientOption option = new LocationClientOption();
-    private View mLoginView;
-    private boolean isLoadWeather = false;
-    @SuppressLint("HandlerLeak")
-    private Handler mHanlder = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case 10001:
-                    requestWeatherAPI();
-                    mLocationClient.stop();
-                    break;
-                case 12580:
-                    mUser = (UserBean) msg.obj;
-                    if(mUser == null || mUser.getUserName().equals("")){
-                        return;
-                    }
-                    frameLayout.removeAllViews();
-                    View view = LayoutInflater
-                            .from(getContext())
-                            .inflate(R.layout.logined_head_wode,null);
-                    frameLayout.addView(view);
-                    reInitMyFragment(view);
-                    break;
-            }
-        }
-    };
-
+    private boolean isLogin = false;
 
     @SuppressLint("SetTextI18n")
     public void reInitMyFragment(View view){
         userName = view.findViewById(R.id.user_name_text);
         userImg = view.findViewById(R.id.user_tx);
-        userName.setText(mUser.getUserName());
-        AdressText = view.findViewById(R.id.adress_text);
+        AddressText = view.findViewById(R.id.adress_text);
         weatherToday = view.findViewById(R.id.weather_jr);
         weatherCk = view.findViewById(R.id.weather_ck);
-
-        if(mWeather != null && mWeather.getTemperature()!=null
-                &&! address.getAddress().equals("")){
-            AdressText.setText(address.getAddress());
-            weatherToday.setText(mWeather.getWeatherStr()+" "
-                    +mWeather.getTemperature()+" "
-                    +mWeather.getWind());
-            weatherCk.setText("此刻 "+mWeather.getCKTemprature()+"℃ "
-                    + mWeather.getCKWind()+" "
-                    +mWeather.getCKWindLevel());
+        userName.setText(mUser.getUserName());
+        if(mWeather != null && mWeather.getTemperature()!=null){
+           updateUi();
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    public void updateUi(){
+        AddressText.setText(address.getAddress());
+        weatherToday.setText(mWeather.getWeatherStr()+" "
+                +mWeather.getTemperature()+" "
+                +mWeather.getWind());
+        weatherCk.setText("此刻 "+mWeather.getCKTemprature()+"℃ "
+                + mWeather.getCKWind()+" "
+                +mWeather.getCKWindLevel());
+    }
 
+
+    //先执行onCreate再执行onCreateView
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWeather = new Weather();
         address = new AddressBean();
 
+        //检查权限
         if(Build.VERSION.SDK_INT >= 24){
-            int check = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
+            int check = ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION);
             if(check == PackageManager.PERMISSION_GRANTED){
                 initLBS();
             }else{
-                ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity( ))
+                ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity())
                         ,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},2);
             }
         }
+        weatherModel = new WeatherModel(mContext, new WeatherModel.IUpdateWeather() {
+            @Override
+            public void updateWeatherDate(Weather weather) {
+                mWeather = weather;
+                if(isLogin){
+                    updateUi();
+                }
+            }
+        });
     }
 
     @Nullable
@@ -122,14 +107,32 @@ public class MyFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wode_layout,container ,false);
         frameLayout = view.findViewById(R.id.wode_frame);
-        View topMainView = LayoutInflater.from(getContext()).inflate(R.layout.activity_main,null,false);
-        View view1 = topMainView.findViewById(R.id.top_main_view);
         loginButton = view.findViewById(R.id.login_btn_wode);
-
         loginButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                LoginPopWindow loginPopWindow = new LoginPopWindow(getContext(),mHanlder);
+                LoginPopWindow loginPopWindow = new LoginPopWindow(mContext, new LoginPopWindow.ILoginStatusListener( ) {
+                    @Override
+                    public void onSuccess(UserBean userBean) {
+                        mUser = userBean;
+                        isLogin = true;
+                        if(mUser == null || mUser.getUserName().equals("")){
+                            Toast.makeText(mContext,"信息失效，请重新登录！",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        frameLayout.removeAllViews();
+                        View view = LayoutInflater
+                                .from(mContext)
+                                .inflate(R.layout.logined_head_wode,null);
+                        frameLayout.addView(view);
+                        reInitMyFragment(view);
+                    }
+
+                    @Override
+                    public void onFail(String errorString) {
+                        Toast.makeText(mContext,errorString,Toast.LENGTH_SHORT).show();
+                    }
+                });
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     loginPopWindow.showAsDropDown(view);
                 }
@@ -138,11 +141,12 @@ public class MyFragment extends Fragment{
         return view;
     }
 
+
     private void initLBS(){
         //BDAbstractLocationListener为7.2版本新增的Abstract类型的监听接口
         //原有BDLocationListener接口暂时同步保留。具体介绍请参考后文中的说明
         //声明LocationClient类
-        mLocationClient = new LocationClient(Objects.requireNonNull(getActivity()).getApplicationContext());
+        mLocationClient = new LocationClient(mContext.getApplicationContext());
         //注册监听函数
         mLocationClient.registerLocationListener(myListener);
 
@@ -187,30 +191,6 @@ public class MyFragment extends Fragment{
         mLocationClient.start();
     }
 
-    //进行网络请求，获取天气api返回的数据
-    public void requestWeatherAPI(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://v.juhe.cn/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        final IGetWeather request = retrofit.create(IGetWeather.class);
-        Call<Weather> call = request.getWeatherData(address.getCity(),"json"
-                ,1,"82be4d603e75b19c337b57d30b319951");
-        call.enqueue(new Callback<Weather>( ) {
-            @Override
-            public void onResponse(Call<Weather> call, Response<Weather> response) {
-                Log.e("onResponse"," ");
-                mWeather = response.body();
-                mHanlder.sendEmptyMessage(12580);
-            }
-            @Override
-            public void onFailure(Call<Weather> call, Throwable t) {
-                Log.e("onFailure",""+t.getMessage());
-            }
-        });
-    }
-
     public class MyLocationListener extends BDAbstractLocationListener {
         //定位成功回调方法
         @Override
@@ -224,10 +204,19 @@ public class MyFragment extends Fragment{
             address.setCity(location.getCity());          //获取城市
             address.setDistrict(location.getDistrict());  //获取区县
             address.setStreet(location.getStreet());      //获取街道信息
+
+            //address会为null
             if(address != null && address.getAddress()!=null){
-                mHanlder.sendEmptyMessage(10001);
+                weatherModel.requestWeatherAPI(address);
+                mLocationClient.stop();
                 Log.e("address",address.getAddress());
             }
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 }

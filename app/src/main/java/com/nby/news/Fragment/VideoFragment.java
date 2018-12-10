@@ -1,5 +1,6 @@
 package com.nby.news.Fragment;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,14 +24,8 @@ import com.nby.news.Interface.OnItemClickListener;
 import com.nby.news.R;
 import com.nby.news.Bean.VideoBean;
 import com.nby.news.Adapter.VideoRecyclerViewAdapter;
-import com.nby.news.StringPool;
+import com.nby.news.model.VideoModel;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +33,8 @@ public class VideoFragment extends Fragment implements CompoundButton.OnCheckedC
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
+    private VideoModel videoModel;
+    private Context mContext;
     private VideoRecyclerViewAdapter videoRecyclerViewAdapter;
     private List<VideoBean> videoDataList = new ArrayList<>();
     private List<VideoBean> videoBeanList = new ArrayList<>();
@@ -46,37 +43,41 @@ public class VideoFragment extends Fragment implements CompoundButton.OnCheckedC
 
 
     @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler(){
+    private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case 1001:
-                    videoBeanList.addAll(videoDataList);
-                    videoRecyclerViewAdapter.notifyDataSetChanged();
-                    break;
-                case 1002:
+                case 201:
+                    videoRecyclerViewAdapter = new VideoRecyclerViewAdapter(videoBeanList
+                            ,mContext,onItemClickListener);
+                    recyclerView.setAdapter(videoRecyclerViewAdapter);
                     break;
             }
         }
     };
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_video_layout,container,false);
-
-        requestDate(StringPool.URL_VIDEO);
-        requestVideoUrl();
         swipeRefreshLayout = view.findViewById(R.id.video_swipeRefreshLayout);
         recyclerView = view.findViewById(R.id.video_recyclerView);
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        LinearLayoutManager manager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(manager);
+        videoModel = new VideoModel(mContext);
+        videoModel.requestVideoDate(new VideoModel.IUpdateVideoModel( ) {
+            @Override
+            public void upDateVideoDate(List<VideoBean> dataList) {
+                videoBeanList.addAll(dataList);
+                videoDataList.addAll(dataList);
+                mHandler.sendEmptyMessage(201);
+            }
+        });
         onItemClickListener = new OnItemClickListener(){
             @Override
             public void onItemClick(View view, int position) {
                 //点击视频播放操作
-                Toast.makeText(getContext(),videoBeanList.get(position).getVideo_link()
+                Toast.makeText(mContext,videoBeanList.get(position).getVideo_link()
                         ,Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), ShowNewsContentActivity.class);
                 intent.putExtra("NewsUrl",videoBeanList.get(position).getVideo_link());
@@ -84,14 +85,6 @@ public class VideoFragment extends Fragment implements CompoundButton.OnCheckedC
                 startActivity(intent);
             }
         };
-        videoRecyclerViewAdapter = new VideoRecyclerViewAdapter(videoBeanList ,getContext(),onItemClickListener);
-        recyclerView.setAdapter(videoRecyclerViewAdapter);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener( ) {
-            @Override
-            public void onRefresh() {
-                // ...
-            }
-        });
         checkBox1 = view.findViewById(R.id.check1);
         checkBox2 = view.findViewById(R.id.check2);
         checkBox3 = view.findViewById(R.id.check3);
@@ -101,48 +94,13 @@ public class VideoFragment extends Fragment implements CompoundButton.OnCheckedC
         return view;
     }
 
-
-    public void sort(){
-        int checkedCount = 0;
-        int isCheckedIds[] = new int[3];
-        if(checkBox1.isChecked()){
-            isCheckedIds[checkedCount] = R.id.check1;
-            checkedCount++;
-        }
-        if(checkBox2.isChecked()){
-            isCheckedIds[checkedCount] = R.id.check2;
-            checkedCount++;
-        }
-        if(checkBox3.isChecked()){
-            isCheckedIds[checkedCount] = R.id.check3;
-            checkedCount++;
-        }
-        videoBeanList.clear();
-        switch (checkedCount){
-            case 0:
-            case 3:
-                videoBeanList.addAll(videoDataList);
-                videoRecyclerViewAdapter.notifyDataSetChanged();
-            case 1:
-               addSelectData(isCheckedIds[0]);
-                break;
-            case 2:
-                addSelectData(isCheckedIds[0]);
-                addSelectData(isCheckedIds[1]);
-                break;
-        }
-
-
-    }
-
     private void addSelectData(int id){
+        Log.e("videoList",""+videoDataList.size());
         switch(id){
             case R.id.check1:
                 for(int i = 0 ; i< videoDataList.size() ;i++){
                     VideoBean videoBean = videoDataList.get(i);
-                    if(videoBean.getMiaoshu().contains(":")|| videoBean.getMiaoshu().contains("集")){
-                        continue;
-                    }else{
+                    if(!videoBean.getMiaoshu().contains(":")&& !videoBean.getMiaoshu().contains("集")){
                         videoBeanList.add(videoBean);
                     }
                 }
@@ -167,93 +125,23 @@ public class VideoFragment extends Fragment implements CompoundButton.OnCheckedC
         videoRecyclerViewAdapter.notifyDataSetChanged();
     }
 
-
-    public void requestDate(String mUrl){
-        new Thread(new Runnable(){
-            @Override
-            public void run() {
-                Document doc = null;
-                try {
-                    doc = Jsoup.connect(mUrl).get();
-                } catch (IOException e) {
-                    e.printStackTrace( );
-                }
-
-                Elements elements = doc.getElementsByClass("mod_bd");
-                for(Element e : elements){
-                    Elements list_item = e.getElementsByClass("list_item");
-                    for(Element item : list_item){
-                        VideoBean videoBean = new VideoBean();
-                        videoBean.setId(list_item.attr("data-id"));
-                       // Log.e("id",videoBean.getId());
-                        Elements content = item.getElementsByClass("figure_pic");
-                        String title = content.attr("alt");
-                        videoBean.setTitle(title);
-                      //  Log.e("标题",title);
-                        String src = "";
-                        src = content.attr("lz_next");
-                        if(src.equals("")){
-                            src = content.attr("src");
-                        }
-                        if(!src.contains("http:")){
-                            src="http:"+src;
-                        }
-                        if(src.equals("")||src.length()<5){
-                            continue;
-                        }
-                        videoBean.setImgUrl(src);
-                       // Log.e("图片",src);
-                        String miaoShu = item.getElementsByClass("figure_count").text();
-                        videoBean.setMiaoshu(miaoShu);
-                       // Log.e("观看数",miaoShu);
-                        String link = item.getElementsByClass("figure").attr("href");
-                        if(link== null ||link.equals("")||link.length()<4)
-                            continue;
-                        videoBean.setVideo_link(link);
-                       // Log.e("link",link);
-                        videoDataList.add(videoBean);
-                    }
-                }
-
-                Elements videos = doc.getElementsByClass("poplayer_quickplay");
-                for(Element e : videos){
-                    //Log.e("aaa",e.html());
-                }
-                handler.sendEmptyMessage(1001);
-            }
-        }).start();
-    }
-
-    public void requestVideoUrl(){
-        new Thread(new Runnable( ) {
-            @Override
-            public void run() {
-                Document doc = null;
-                try {
-                    doc = Jsoup.connect("https://v.qq.com/x/page/i0765onuty9.html").get();
-                } catch (IOException e) {
-                    e.printStackTrace( );
-                }
-                Elements elements = doc.getElementsByClass("site_container container_player");
-                for(Element e : elements){
-                    Elements item = e.getElementsByClass("mod_player");
-                    for(Element content: item){//txp_video_container
-//                        Log.e("a",item.html());
-                        Elements player = content.getElementsByClass("tenvideo_player");
-                        for(Element element: player){
-                            Elements source = element.getElementsByClass("txp_video_container");
-//                            Log.e("视频源",source.attr("src"));
-                        }
-//                        Log.e("aaa",player.html());
-                    }
-                }
-            }
-        }).start();
-    }
-
-
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        sort();
+        videoBeanList.clear();
+        if(checkBox1.isChecked()){
+            addSelectData(R.id.check1);
+        }
+        if(checkBox2.isChecked()){
+            addSelectData(R.id.check2);
+        }
+        if(checkBox3.isChecked()){
+            addSelectData(R.id.check3);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 }

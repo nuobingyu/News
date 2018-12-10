@@ -6,8 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.nby.news.Bean.NewsBean;
 import com.nby.news.Interface.OnItemClickListener;
 import com.nby.news.R;
@@ -15,24 +17,34 @@ import com.nby.news.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MilitaryRecyclerViewAdapter extends
-        RecyclerView.Adapter<MilitaryRecyclerViewAdapter.ViewHolder>{
-
-    private List<NewsBean> dataList = new ArrayList<>();
+public class InternationalRcvAdapter extends
+        RecyclerView.Adapter<InternationalRcvAdapter.ViewHolder>{
     private Context mContext;
+    private List<NewsBean> dataList = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener;
 
-    public MilitaryRecyclerViewAdapter(Context context, List<NewsBean> list
+    public InternationalRcvAdapter(Context context , List<NewsBean> list
             , OnItemClickListener onItemClickListener){
         mContext = context;
         dataList = list;
         mOnItemClickListener = onItemClickListener;
     }
 
+    static class ViewHolder extends RecyclerView.ViewHolder{
+        ImageView img ;
+        TextView pText,title;
+        public ViewHolder(View itemView) {
+            super(itemView);
+            img = itemView.findViewById(R.id.img_international);
+            title = itemView.findViewById(R.id.title_international);
+            pText = itemView.findViewById(R.id.pText_international);
+        }
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_military,parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_international,parent,false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -42,25 +54,18 @@ public class MilitaryRecyclerViewAdapter extends
         holder.itemView.setOnClickListener(new View.OnClickListener( ) {
             @Override
             public void onClick(View v) {
-                mOnItemClickListener.onItemClick(holder.itemView, position);
+                mOnItemClickListener.onItemClick(holder.itemView,position);
             }
         });
-        holder.titleTextView.setText(dataList.get(position).title);
-        holder.timeTextView.setText(dataList.get(position).time);
+        Glide.with(mContext)
+                .load(dataList.get(position).imgUrls.get(0))
+                .into(holder.img);
+        holder.title.setText(dataList.get(position).title);
+        holder.pText.setText(dataList.get(position).pText);
     }
 
     @Override
     public int getItemCount() {
         return dataList.size();
-    }
-
-    static class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView titleTextView;
-        private TextView timeTextView;
-        public ViewHolder(View itemView) {
-            super(itemView);
-            titleTextView = itemView.findViewById(R.id.title_military);
-            timeTextView = itemView.findViewById(R.id.time_military);
-        }
     }
 }

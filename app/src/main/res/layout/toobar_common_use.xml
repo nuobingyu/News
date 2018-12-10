@@ -28,5 +28,8 @@
         android:layout_marginRight="10dp"
         android:src="@drawable/ic_more"
         android:layout_centerVertical="true"/>
-    <include layout="@layout/line"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line_color"/>
 </RelativeLayout>

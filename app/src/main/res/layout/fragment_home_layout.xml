@@ -19,25 +19,25 @@
             android:paddingLeft="20dp"
             android:focusableInTouchMode="true"
             android:background="@color/app_main_color">
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="请输入您要搜索的关键字"
-                android:textSize="14sp"
-                android:onClick="intentSearchActivity"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:layout_marginRight="50dp"
-                android:background="@drawable/search_white" />
-            <!--<TextView-->
+            <!--<EditText-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="50dp"-->
                 <!--android:hint="请输入您要搜索的关键字"-->
+                <!--android:textSize="14sp"-->
                 <!--android:onClick="intentSearchActivity"-->
                 <!--android:gravity="center_vertical"-->
                 <!--android:paddingLeft="10dp"-->
                 <!--android:layout_marginRight="50dp"-->
                 <!--android:background="@drawable/search_white" />-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="请输入您要搜索的关键字"
+                android:onClick="intentSearchActivity"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:layout_marginRight="50dp"
+                android:background="@drawable/search_white" />
             <ImageView
                 android:id="@+id/home_search_img"
                 android:layout_width="wrap_content"

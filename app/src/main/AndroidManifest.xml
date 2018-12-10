@@ -2,17 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.nby.news">
+    <!--权限-->
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- SDCard中创建与删除文件权限 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
         tools:ignore="ProtectedPermissions" />
-
     <!--读取SDCard数据权限-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
     <!-- 向SDCard写入数据权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
     <!-- 这个权限用于进行网络定位-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
     <!-- 这个权限用于访问GPS定位-->
@@ -35,23 +33,42 @@
         android:supportsRtl="true"
         android:windowSoftInputMode="stateHidden"
         android:theme="@style/AppTheme">
+        <!--百度地图的api_key-->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="6PoUlKvChSYfnsFtajgTWoNt2IQt5AMK">
         </meta-data>
-
+        <!--是搜索框可以在整个应用中调用-->
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value=".Activity.SearchActivity">
+        </meta-data>
+        <!--主活动-->
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.SearchActivity"/>
+        <!--搜索活动-->
+        <activity android:name=".Activity.SearchActivity" android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable">
+
+            </meta-data>
+        </activity>
+
         <activity android:name=".Activity.ShowNewsContentActivity"/>
 
+        <!--自定义服务-->
         <service android:name=".Service.UpdateService"
             android:enabled="true"
             android:exported="true"/>
+        <!--百度地图服务-->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

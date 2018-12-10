@@ -1,6 +1,5 @@
 package com.nby.news.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nby.news.Activity.MainActivity;
-import com.nby.news.Activity.SearchActivity;
 import com.nby.news.Adapter.HomeViewPagerAdapter;
 import com.nby.news.R;
 

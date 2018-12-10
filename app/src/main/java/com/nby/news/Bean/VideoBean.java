@@ -2,7 +2,9 @@ package com.nby.news.Bean;
 
 import android.widget.ImageView;
 
-public class VideoBean {
+import java.io.Serializable;
+
+public class VideoBean implements Serializable{
     private String form;
     private String miaoshu;
     private int pinglunCount;

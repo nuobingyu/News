@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -23,6 +23,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.nby.news.View.MyCircleView
             android:id="@+id/user_tx"
             android:src="@drawable/ic_mytag"
@@ -44,6 +45,7 @@
             android:layout_marginLeft="80dp"
             android:layout_marginRight="80dp"
             android:layout_marginBottom="10dp"
+            app:cardCornerRadius="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <LinearLayout

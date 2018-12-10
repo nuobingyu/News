@@ -41,7 +41,7 @@ public class MilitaryRevVerticalAdapter extends RecyclerView.Adapter<MilitaryRev
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.item_rev_vertical,null,false);
+                .inflate(R.layout.item_rcv_vertical,null,false);
         return new ViewHolder(view);
     }
 

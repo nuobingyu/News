@@ -154,6 +154,7 @@ public class HotSpotListAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         NewsBean newsBean = newsBeanList.get(position);
+
         if(newsBean==null){
             return;
         }
@@ -199,7 +200,6 @@ public class HotSpotListAdapter extends RecyclerView.Adapter{
             @Override
             public void onClick(View v) {
                 onItemClickListener.onItemClick(v,position);
-
             }
         });
 

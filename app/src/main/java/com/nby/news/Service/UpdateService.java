@@ -34,7 +34,6 @@ public class UpdateService extends Service{
         super.onCreate( );
         //executeLBSListen();
     }
-
     private void executeLBSListen(){
 
         new Handler().postDelayed(new Runnable( ) {

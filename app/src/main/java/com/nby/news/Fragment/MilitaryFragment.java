@@ -1,6 +1,7 @@
 package com.nby.news.Fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +22,7 @@ import com.nby.news.Adapter.MilitaryRevHorizontalAdapter;
 import com.nby.news.Adapter.MilitaryRevVerticalAdapter;
 import com.nby.news.Adapter.MilitaryViewPagerAdapter;
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.Interface.IUpdateDate;
+import com.nby.news.Interface.IUpdateNewsDate;
 import com.nby.news.model.MilitaryModel;
 import com.nby.news.R;
 
@@ -44,6 +45,7 @@ public class MilitaryFragment extends Fragment{
     private MilitaryRevHorizontalAdapter horizontalAdapter;
     private MilitaryRevVerticalAdapter verticalAdapter;
     private ScheduledExecutorService scheduledExecutorService;
+    private Context mContext;
     private MilitaryModel model;
     private MilitaryViewPagerAdapter pagerAdapter;
     private List<NewsBean> pageDataList = new ArrayList<>();
@@ -55,16 +57,16 @@ public class MilitaryFragment extends Fragment{
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 1001:
-                    pagerAdapter = new MilitaryViewPagerAdapter(getContext(),pageDataList);
+                    pagerAdapter = new MilitaryViewPagerAdapter(mContext,pageDataList);
                     mViewPager.setAdapter(pagerAdapter);
                     titleTextView.setText(pageDataList.get(0).getTitle());
                     break;
                 case 1002:
-                    horizontalAdapter = new MilitaryRevHorizontalAdapter(getContext(),beanList_jx);
+                    horizontalAdapter = new MilitaryRevHorizontalAdapter(mContext,beanList_jx);
                     recyclerView_horizontal.setAdapter(horizontalAdapter);
                     break;
                 case 1003:
-                    verticalAdapter = new MilitaryRevVerticalAdapter(getContext(),beanList_yw);
+                    verticalAdapter = new MilitaryRevVerticalAdapter(mContext,beanList_yw);
                     recyclerView_vertical.setAdapter(verticalAdapter);
                     break;
                 case 1004:
@@ -94,8 +96,8 @@ public class MilitaryFragment extends Fragment{
         dots.add(view.findViewById(R.id.dot_0));
         dots.add(view.findViewById(R.id.dot_1));
         dots.add(view.findViewById(R.id.dot_2));
-        model = new MilitaryModel();
-        model.requestViewPagerDate(new IUpdateDate( ) {
+        model = new MilitaryModel(mContext);
+        model.requestViewPagerDate(new IUpdateNewsDate( ) {
             @Override
             public void update(List<NewsBean> dataList) {
                 if(dataList.size()<3)
@@ -123,7 +125,7 @@ public class MilitaryFragment extends Fragment{
             }
         });
         recyclerView_horizontal = view.findViewById(R.id.military_recycler_horizontal);
-        LinearLayoutManager layoutManager_ht = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager_ht = new LinearLayoutManager(mContext);
         layoutManager_ht.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView_horizontal.setLayoutManager(layoutManager_ht);
         recyclerView_horizontal.addItemDecoration(new RecyclerView.ItemDecoration( ) {
@@ -133,7 +135,7 @@ public class MilitaryFragment extends Fragment{
                 outRect.left = 10;
             }
         });
-        model.requestNews_JX(new IUpdateDate( ) {
+        model.requestNews_JX(new IUpdateNewsDate( ) {
             @Override
             public void update(List<NewsBean> dataList) {
                 beanList_jx = dataList;
@@ -141,10 +143,10 @@ public class MilitaryFragment extends Fragment{
             }
         });
         recyclerView_vertical = view.findViewById(R.id.military_recycler_vertical);
-        LinearLayoutManager layoutManager_vt = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager_vt = new LinearLayoutManager(mContext);
         layoutManager_vt.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView_vertical.setLayoutManager(layoutManager_vt);
-        model.requestNews_YW(new IUpdateDate( ) {
+        model.requestNews_YW(new IUpdateNewsDate( ) {
             @Override
             public void update(List<NewsBean> dataList) {
                 beanList_yw = dataList;
@@ -178,5 +180,11 @@ public class MilitaryFragment extends Fragment{
             scheduledExecutorService.shutdown();
             scheduledExecutorService = null;
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 }

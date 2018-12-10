@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide;
 import com.nby.news.Bean.NewsBean;
 import com.nby.news.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LifeRecyclerViewAdapter extends RecyclerView.Adapter<LifeRecyclerViewAdapter.ViewHolder>{
@@ -30,7 +29,7 @@ public class LifeRecyclerViewAdapter extends RecyclerView.Adapter<LifeRecyclerVi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_life,null,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_rcv_life,null,false);
         return new ViewHolder(view);
     }
 

@@ -19,7 +19,7 @@
             android:paddingBottom="10dp"
             android:background="#fff">
             <EditText
-                android:id="@+id/search_inputText1"
+                android:id="@+id/search_activity_input"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="请输入您要搜索的关键字"
@@ -32,7 +32,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/search"
-                android:onClick="search"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="35dp"/>
@@ -55,9 +54,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="热门搜索"
+        android:textColor="@color/black_color"
         android:layout_marginBottom="10dp"/>
     <GridLayout
-        android:id="@+id/gridLayout_search"
+        android:id="@+id/gridLayout_hotSearch"
         android:layout_width="match_parent"
         android:layout_height="210dp"
         android:columnCount="2"
@@ -75,7 +75,7 @@
         android:textColor="@color/black_color"
         android:text="历史搜索"/>
     <GridLayout
-        android:id="@+id/history"
+        android:id="@+id/gridLayout_history"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp"
         android:layout_width="match_parent"

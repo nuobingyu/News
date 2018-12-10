@@ -3,7 +3,6 @@ package com.nby.news.Adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,10 +58,10 @@ public class MilitaryRevHorizontalAdapter extends RecyclerView.Adapter{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(viewType==1){
-            View view = LayoutInflater.from(mContext).inflate(R.layout.item_rev_horizontal,null,false);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_rcv_horizontal,null,false);
             return new ViewHolder(view);
         }
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_rev_horizontal_nopic,null,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_rcv_horizontal_nopic,null,false);
         return new ViewHolderNoPic(view);
     }
 

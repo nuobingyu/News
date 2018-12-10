@@ -39,7 +39,7 @@ public class CultureRcvAdapter extends RecyclerView.Adapter<CultureRcvAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_culture_rv
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_rcv_culture
                 ,null,false);
         return new ViewHolder(view);
     }

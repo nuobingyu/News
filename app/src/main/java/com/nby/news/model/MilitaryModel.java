@@ -1,9 +1,10 @@
 package com.nby.news.model;
 
-import android.util.Log;
+import android.content.Context;
 
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.Interface.IUpdateDate;
+import com.nby.news.Interface.IUpdateNewsDate;
+import com.nby.news.unit.SharedPreferencesUnit;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,7 +20,13 @@ public class MilitaryModel {
     private static String JX_DATA_URL = "http://mil.huanqiu.com/world/";
     private static String YW_DATA_URL = "http://mil.huanqiu.com/strategysituation/";
 
-    public void requestViewPagerDate(IUpdateDate iUpdateDate){
+    private Context mContext;
+
+    public MilitaryModel(Context context){
+        mContext = context;
+    }
+
+    public void requestViewPagerDate(IUpdateNewsDate iUpdateDate){
         List<NewsBean> list = new ArrayList<>();
         new Thread(new Runnable( ) {
             @Override
@@ -52,7 +59,7 @@ public class MilitaryModel {
         }).start();
     }
 
-    public void requestNews_JX(IUpdateDate iUpdateDate){
+    public void requestNews_JX(IUpdateNewsDate iUpdateDate){
         List<NewsBean> list = new ArrayList<>();
         new Thread(new Runnable( ) {
             @Override
@@ -74,13 +81,14 @@ public class MilitaryModel {
                     newsBean.setpText(e.getElementsByTag("h5").text());
                     newsBean.setTime(e.getElementsByTag("h6").text());
                     list.add(newsBean);
+                    new SharedPreferencesUnit(mContext).putNewsBean(newsBean.title,newsBean);
                 }
                 iUpdateDate.update(list);
             }
         }).start();
     }
 
-    public void requestNews_YW(IUpdateDate iUpdateDate){
+    public void requestNews_YW(IUpdateNewsDate iUpdateDate){
         List<NewsBean> list = new ArrayList<>();
         new Thread(new Runnable( ) {
             @Override
@@ -102,6 +110,7 @@ public class MilitaryModel {
                     newsBean.setpText(e.getElementsByTag("h5").text());
                     newsBean.setTime(e.getElementsByTag("h6").text());
                     list.add(newsBean);
+                    new SharedPreferencesUnit(mContext).putNewsBean(newsBean.title,newsBean);
                 }
                 iUpdateDate.update(list);
             }
