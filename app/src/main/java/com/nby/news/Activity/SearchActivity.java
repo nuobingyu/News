@@ -19,21 +19,18 @@ import com.nby.news.unit.SharedPreferencesUnit;
 
 public class SearchActivity extends Activity{
 
-    private GridLayout gridLayout_hotNews;
     private GridLayout gridLayout_history;
     private EditText searchEditTextView;
-    private String[] hotSearchStrings = {"测试一","测试二","测试三","测试四","测试五","测试六"};
     private String[] historySearchStrings = {"a","b","c","d","e","f","g"};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        handleIntent(getIntent());
         setContentView(R.layout.activity_search_layout);
         //初始化控件
         searchEditTextView = findViewById(R.id.search_activity_input);
-        gridLayout_hotNews = findViewById(R.id.gridLayout_hotSearch);
         gridLayout_history = findViewById(R.id.gridLayout_history);
-        searchEditTextView = findViewById(R.id.search_activity_input);
         //获取搜索数据源
         SharedPreferencesUnit spUnit = new SharedPreferencesUnit(this);
         spUnit.getNewsBean("News");
@@ -43,9 +40,10 @@ public class SearchActivity extends Activity{
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP){
                     Log.e("监听到enter"," ");
-                    Intent intent = new Intent(Intent.ACTION_SEARCH);
+                    Intent intent = new Intent("android.intent.action.SEARCH");
                     intent.putExtra(SearchManager.QUERY,searchEditTextView.getText());
                     startActivity(intent);
+
                     return true;
                 }
                 return false;
@@ -57,17 +55,18 @@ public class SearchActivity extends Activity{
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String ss = s.toString();
-                Log.e("Text变化内容",ss);
             }
             @Override
             public void afterTextChanged(Editable s) {
+                String ss = s.toString();
+                Log.e("Text变化内容",ss);
             }
         });
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
+        Log.e("onNewIntent"," ");
         setIntent(intent);
         handleIntent(intent);
     }
@@ -75,6 +74,7 @@ public class SearchActivity extends Activity{
     public void handleIntent(Intent intent){
         if(Intent.ACTION_SEARCH.equals(intent.getAction())){
             String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.e("正在搜索内容",query);
             doMySearch(query);
         }
     }

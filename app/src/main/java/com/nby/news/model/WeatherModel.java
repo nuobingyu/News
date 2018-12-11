@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.nby.news.Bean.AddressBean;
-import com.nby.news.Bean.Weather;
+import com.nby.news.json.Weather;
 import com.nby.news.Interface.IGetWeather;
 
 import retrofit2.Call;

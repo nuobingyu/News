@@ -1,6 +1,6 @@
 package com.nby.news.Interface;
 
-import com.nby.news.Bean.Weather;
+import com.nby.news.json.Weather;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

@@ -1,4 +1,4 @@
-package com.nby.news.Bean;
+package com.nby.news.json;
 
 import android.util.Log;
 public class Weather {
@@ -36,20 +36,4 @@ public class Weather {
     }
 }
 
-class Result {
-    public today today;
-    public sk sk;
-}
-
-class sk{
-    String temp;
-    String wind_direction;
-    String wind_strength;
-}
-
-class today {
-    public String temperature;
-    public String weather;
-    public String wind;
-}
 

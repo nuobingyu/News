@@ -29,6 +29,11 @@ public class MyCircleView extends android.support.v7.widget.AppCompatImageView{
     private int height,width,mRadius;
     private float mScale;
     private Matrix matrix;
+    private int mLeft,mTop;
+    private int padding_bottom;
+    private int padding_top;
+    private int padding_left;
+    private int padding_right;
 
     public MyCircleView(Context context) {
         this(context,null);
@@ -49,31 +54,34 @@ public class MyCircleView extends android.support.v7.widget.AppCompatImageView{
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawColor(Color.WHITE);
-        height = getHeight() - getPaddingTop() - getPaddingBottom();
-        width = getWidth() - getPaddingLeft() - getPaddingRight();
-        int size = Math.min(height ,width);
-        mRadius = size/2;
+
         mCanvas = canvas;
         drawable= getDrawable();
         if(drawable != null){
-            int cx = mRadius;
-            int cy = mRadius;
+            height = getBottom()-getTop(); //高度
+            width = getRight()-getLeft();  //宽度
+            Log.e("宽高","width="+width+",height="+height);
+            mRadius = Math.min(height ,width)/2;
+            int cx = mLeft+width/2;
+            int cy = mTop+height/2-30;
+            Log.e("圆心","cx="+cx+",cy="+cy);
             Bitmap bitmap =((BitmapDrawable)drawable).getBitmap();
             BitmapShader bitmapShader = new BitmapShader(bitmap , CLAMP , CLAMP);
             mScale = (mRadius * 2.0f) / Math.min(bitmap.getHeight() ,bitmap.getWidth());
             matrix.setScale(mScale,mScale);
             bitmapShader.setLocalMatrix(matrix);
+            Log.e("r",mRadius+"");
             mPaint.setShader(bitmapShader);
 
+            matrix.postTranslate(cx-mRadius,cy-mRadius);
             Path path = new Path();
             path.addCircle(cx,cy,mRadius, Path.Direction.CW); //cw
             canvas.clipPath(path);
             canvas.setMatrix(matrix);
             canvas.drawARGB(0,0,0,0);
-
-            Log.i("Bitmap",bitmap.getWidth() +","+bitmap.getHeight());
+            canvas.drawBitmap(bitmap,0, 0, mPaint);
         }else{
+            Log.e("drawable为null"," ");
             super.onDraw(canvas);
         }
     }
@@ -84,15 +92,34 @@ public class MyCircleView extends android.support.v7.widget.AppCompatImageView{
 
         ViewGroup.LayoutParams lp =getLayoutParams();
         if(lp.width == ViewGroup.LayoutParams.WRAP_CONTENT){
+            Log.e("width","WRAP_CONTENT");
             lp.width = dip2px(50);
         }
         if(lp.height == ViewGroup.LayoutParams.WRAP_CONTENT){
+            Log.e("height","WRAP_CONTENT");
             lp.height = dip2px(50);
         }
+
     }
 
     public int dip2px(int px){
         float scale = mContext.getResources().getDisplayMetrics().density;
         return (int)(px*scale +0.5f);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        padding_bottom = getPaddingBottom();
+        padding_top = getPaddingTop();
+        padding_left = getPaddingLeft();
+        padding_right = getPaddingRight();
+        setLeft(left+padding_left);
+        setRight(right-padding_right);
+        setBottom(bottom-padding_bottom);
+        setTop(top+padding_top);
+        mLeft = left;
+        mTop = top;
+        Log.e("top",mTop+"");
     }
 }
