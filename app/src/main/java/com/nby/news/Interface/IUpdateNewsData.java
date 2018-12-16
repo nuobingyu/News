@@ -5,7 +5,7 @@ import com.nby.news.Bean.VideoBean;
 
 import java.util.List;
 
-public interface IUpdateNewsDate {
+public interface IUpdateNewsData {
 
     void update(List<NewsBean> dataList);
 

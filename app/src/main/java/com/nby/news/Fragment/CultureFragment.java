@@ -17,7 +17,7 @@ import android.os.Handler;
 
 import com.nby.news.Adapter.CultureRcvAdapter;
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.Interface.IUpdateNewsDate;
+import com.nby.news.Interface.IUpdateNewsData;
 import com.nby.news.R;
 import com.nby.news.model.CultureModel;
 
@@ -59,7 +59,7 @@ public class CultureFragment extends Fragment{
             }
         });
         cultureModel = new CultureModel(mContext);
-        cultureModel.requestData(new IUpdateNewsDate( ) {
+        cultureModel.requestData(new IUpdateNewsData( ) {
             @Override
             public void update(List<NewsBean> dataList) {
                 newsBeans = dataList;

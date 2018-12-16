@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 
 import com.nby.news.Adapter.InternationalRcvAdapter;
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.Interface.IUpdateNewsDate;
+import com.nby.news.Interface.IUpdateNewsData;
 import com.nby.news.Interface.OnItemClickListener;
 import com.nby.news.R;
 import com.nby.news.model.InternationalModel;
@@ -62,7 +62,7 @@ public class InternationalFragment extends Fragment{
         recyclerView = view.findViewById(R.id.international_recyclerView);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(mContext,2);
         recyclerView.setLayoutManager(layoutManager);
-        internationalModel.requestData(new IUpdateNewsDate() {
+        internationalModel.requestData(new IUpdateNewsData() {
             @Override
             public void update(List<NewsBean> dataList) {
                 newsBeanList = dataList;

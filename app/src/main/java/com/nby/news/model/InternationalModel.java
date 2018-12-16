@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.Interface.IUpdateNewsDate;
+import com.nby.news.Interface.IUpdateNewsData;
 import com.nby.news.StringPool;
 import com.nby.news.unit.SharedPreferencesUnit;
 
@@ -26,7 +26,7 @@ public class InternationalModel {
         mContext = context;
     }
 
-    public void requestData(IUpdateNewsDate iUpdateDate){
+    public void requestData(IUpdateNewsData iUpdateDate){
         List<NewsBean> newsBeanList = new ArrayList<>();
         new Thread(new Runnable( ) {
             @Override

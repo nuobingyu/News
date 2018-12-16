@@ -19,12 +19,11 @@ import android.view.ViewGroup;
 
 import com.nby.news.Bean.NewsBean;
 import com.nby.news.Adapter.HotSpotListAdapter;
-import com.nby.news.Interface.IUpdateNewsDate;
+import com.nby.news.Interface.IUpdateNewsData;
 import com.nby.news.Interface.OnItemClickListener;
 import com.nby.news.R;
 import com.nby.news.Activity.ShowNewsContentActivity;
 import com.nby.news.model.HotSportModel;
-import com.nby.news.unit.FileUnit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +70,7 @@ public class HotSpotFragment extends Fragment{
         recyclerView.setLayoutManager(layoutManager);
         hotSportModel = new HotSportModel(mContext);
         isLoading = true;
-        hotSportModel.requestDate(new IUpdateNewsDate( ) {
+        hotSportModel.requestDate(new IUpdateNewsData( ) {
             @Override
             public void update(List<NewsBean> dataList) {
                 isLoading = false;

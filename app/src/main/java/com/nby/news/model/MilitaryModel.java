@@ -3,7 +3,7 @@ package com.nby.news.model;
 import android.content.Context;
 
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.Interface.IUpdateNewsDate;
+import com.nby.news.Interface.IUpdateNewsData;
 import com.nby.news.unit.SharedPreferencesUnit;
 
 import org.jsoup.Jsoup;
@@ -26,7 +26,7 @@ public class MilitaryModel {
         mContext = context;
     }
 
-    public void requestViewPagerDate(IUpdateNewsDate iUpdateDate){
+    public void requestViewPagerDate(IUpdateNewsData iUpdateDate){
         List<NewsBean> list = new ArrayList<>();
         new Thread(new Runnable( ) {
             @Override
@@ -59,7 +59,7 @@ public class MilitaryModel {
         }).start();
     }
 
-    public void requestNews_JX(IUpdateNewsDate iUpdateDate){
+    public void requestNews_JX(IUpdateNewsData iUpdateDate){
         List<NewsBean> list = new ArrayList<>();
         new Thread(new Runnable( ) {
             @Override
@@ -88,7 +88,7 @@ public class MilitaryModel {
         }).start();
     }
 
-    public void requestNews_YW(IUpdateNewsDate iUpdateDate){
+    public void requestNews_YW(IUpdateNewsData iUpdateDate){
         List<NewsBean> list = new ArrayList<>();
         new Thread(new Runnable( ) {
             @Override

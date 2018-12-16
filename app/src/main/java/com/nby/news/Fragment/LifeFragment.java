@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 
 import com.nby.news.Adapter.LifeRecyclerViewAdapter;
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.Interface.IUpdateNewsDate;
+import com.nby.news.Interface.IUpdateNewsData;
 import com.nby.news.R;
 import com.nby.news.model.LifeModel;
 
@@ -71,7 +71,7 @@ public class LifeFragment extends Fragment{
         });
         refreshLayout = view.findViewById(R.id.life_refresh);
         lifeModel = new LifeModel(mContext);
-        lifeModel.requestLifeDate(new IUpdateNewsDate( ) {
+        lifeModel.requestLifeDate(new IUpdateNewsData( ) {
             @Override
             public void update(List<NewsBean> dataList) {
                 newsBeanList = dataList;

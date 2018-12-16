@@ -1,10 +1,12 @@
 package com.nby.news.model;
 
+import android.content.ContentValues;
 import android.content.Context;
 
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.Interface.IUpdateNewsDate;
+import com.nby.news.Interface.IUpdateNewsData;
 import com.nby.news.StringPool;
+import com.nby.news.db.DBHelper;
 import com.nby.news.unit.SharedPreferencesUnit;
 
 import org.jsoup.Jsoup;
@@ -20,19 +22,21 @@ public class HotSportModel {
     private static String mUrl= StringPool.URL_HOTSPOT;
 
     private Context mContext;
+    private DBHelper dbHelper;
 
     public HotSportModel(Context context){
         mContext = context;
+        dbHelper = new DBHelper(mContext,"DBHelper",null,1);
     }
 
-    public void requestDate(IUpdateNewsDate iUpdateDate)  {
+    public void requestDate(IUpdateNewsData iUpdateDate)  {
         List<NewsBean> newsBeanList = new ArrayList<>();
         new Thread(new Runnable(){
             @Override
             public void run() {
                 Document doc = null;
                 try {
-                    doc = Jsoup.connect(mUrl).get( );
+                    doc = Jsoup.connect(mUrl).get();
                 }catch (IOException e){
                     e.printStackTrace();
                 }
@@ -56,8 +60,12 @@ public class HotSportModel {
                     newsBean.setTitle(link.text());
                     //  Log.e("新闻link（正文链接）",linkStr);
                     newsBeanList.add(newsBean);
+                    ContentValues contentValues =new ContentValues();
+                    contentValues.put("title",newsBean.title);
+                    contentValues.put("url",newsBean.url);
+                    dbHelper.getWritableDatabase()
+                            .insert("search",null,contentValues);
                     new SharedPreferencesUnit(mContext).putNewsBean(newsBean.title,newsBean);
-                    //  fileUnit.appendToTempFile(newsBean);
                 }
                 iUpdateDate.update(newsBeanList);
             }

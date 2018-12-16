@@ -11,9 +11,10 @@ import android.view.View;
 import com.nby.news.Adapter.MainViewPagerAdapter;
 import com.nby.news.R;
 import com.nby.news.Service.UpdateService;
+import com.nby.news.db.DBHelper;
 import com.nby.news.unit.FileUnit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private TabLayout tabLayout_bottom;
     private ViewPager viewPager;
@@ -24,6 +25,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        DBHelper dbHelper = new DBHelper(this,"DBHelper",null,1);
+        dbHelper.deleteTable("search");
+//        dbHelper.deleteTable("history");
+        if(!dbHelper.IsTableExist("search",dbHelper.getWritableDatabase())){
+            dbHelper.createTable("create table search(title text,url text)");
+        }
+
         //清空文件内容
         new FileUnit(this).clearAndDelectedFile();
         //开启服务

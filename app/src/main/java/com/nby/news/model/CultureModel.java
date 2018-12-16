@@ -3,7 +3,7 @@ package com.nby.news.model;
 import android.content.Context;
 
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.Interface.IUpdateNewsDate;
+import com.nby.news.Interface.IUpdateNewsData;
 import com.nby.news.StringPool;
 import com.nby.news.unit.SharedPreferencesUnit;
 
@@ -25,7 +25,7 @@ public class CultureModel {
     }
 
     private static String mUrl = StringPool.URL_CULTURE;
-    public void requestData(IUpdateNewsDate iUpdateDate ){
+    public void requestData(IUpdateNewsData iUpdateDate ){
         new Thread(new Runnable( ) {
             List<NewsBean> dataList = new ArrayList<>();
             @Override

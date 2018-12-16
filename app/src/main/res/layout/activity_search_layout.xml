@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -8,6 +8,7 @@
     android:layout_marginRight="20dp"
     android:layout_marginTop="24dp">
     <LinearLayout
+        android:id="@+id/search_layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:background="#fefefe"
@@ -28,9 +29,10 @@
                 android:hint="请输入您要搜索的关键字"
                 android:gravity="center_vertical"
                 android:paddingLeft="10dp"
+                android:paddingRight="50dp"
                 android:background="@drawable/search_blue" />
             <ImageView
-                android:id="@+id/search_img1"
+                android:id="@+id/search_activity_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/search"
@@ -43,27 +45,39 @@
                 android:background="#bff0ff"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:layout_toLeftOf="@+id/search_img1"/>
+                android:layout_toLeftOf="@+id/search_activity_icon"/>
         </RelativeLayout>
+        <ListView
+            android:id="@+id/hintList_search"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="10dp"/>
+
     </LinearLayout>
 
-    <View
+    <LinearLayout
+        android:layout_below="@id/search_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="#f3f3f3"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/black_color"
-        android:text="历史搜索"/>
-    <GridLayout
-        android:id="@+id/gridLayout_history"
-        android:layout_marginBottom="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:rowCount="3"
-        android:columnCount="3"/>
-</LinearLayout>
+        android:layout_height="match_parent">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="#f3f3f3"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/black_color"
+            android:text="历史搜索"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_activity_history_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

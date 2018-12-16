@@ -22,7 +22,7 @@ import com.nby.news.Adapter.MilitaryRevHorizontalAdapter;
 import com.nby.news.Adapter.MilitaryRevVerticalAdapter;
 import com.nby.news.Adapter.MilitaryViewPagerAdapter;
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.Interface.IUpdateNewsDate;
+import com.nby.news.Interface.IUpdateNewsData;
 import com.nby.news.model.MilitaryModel;
 import com.nby.news.R;
 
@@ -97,7 +97,7 @@ public class MilitaryFragment extends Fragment{
         dots.add(view.findViewById(R.id.dot_1));
         dots.add(view.findViewById(R.id.dot_2));
         model = new MilitaryModel(mContext);
-        model.requestViewPagerDate(new IUpdateNewsDate( ) {
+        model.requestViewPagerDate(new IUpdateNewsData( ) {
             @Override
             public void update(List<NewsBean> dataList) {
                 if(dataList.size()<3)
@@ -135,7 +135,7 @@ public class MilitaryFragment extends Fragment{
                 outRect.left = 10;
             }
         });
-        model.requestNews_JX(new IUpdateNewsDate( ) {
+        model.requestNews_JX(new IUpdateNewsData( ) {
             @Override
             public void update(List<NewsBean> dataList) {
                 beanList_jx = dataList;
@@ -146,7 +146,7 @@ public class MilitaryFragment extends Fragment{
         LinearLayoutManager layoutManager_vt = new LinearLayoutManager(mContext);
         layoutManager_vt.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView_vertical.setLayoutManager(layoutManager_vt);
-        model.requestNews_YW(new IUpdateNewsDate( ) {
+        model.requestNews_YW(new IUpdateNewsData( ) {
             @Override
             public void update(List<NewsBean> dataList) {
                 beanList_yw = dataList;

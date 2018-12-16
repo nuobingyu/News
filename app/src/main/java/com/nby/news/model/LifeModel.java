@@ -3,7 +3,7 @@ package com.nby.news.model;
 import android.content.Context;
 
 import com.nby.news.Bean.NewsBean;
-import com.nby.news.Interface.IUpdateNewsDate;
+import com.nby.news.Interface.IUpdateNewsData;
 import com.nby.news.StringPool;
 import com.nby.news.unit.SharedPreferencesUnit;
 
@@ -25,7 +25,7 @@ public class LifeModel {
         mContext = context;
     }
 
-    public void requestLifeDate(IUpdateNewsDate iUpdateDate, String mUrl){
+    public void requestLifeDate(IUpdateNewsData iUpdateDate, String mUrl){
         List<NewsBean> beanList = new ArrayList<>();
         new Thread(new Runnable( ) {
             @Override
