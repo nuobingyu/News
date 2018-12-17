@@ -13,5 +13,7 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textColor="@color/black_color"
-        android:text="test"/>
+        android:text="Dector Who"
+        android:ellipsize="end"
+        />
 </LinearLayout>

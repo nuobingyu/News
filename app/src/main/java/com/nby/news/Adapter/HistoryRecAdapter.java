@@ -16,10 +16,17 @@ public class HistoryRecAdapter extends RecyclerView.Adapter<HistoryRecAdapter.Vi
 
     private List<String> mHistoryList;
     private Context mContext;
+    private ClickListener mClickListener;
 
-    public HistoryRecAdapter (Context context ,List<String> historyList){
+    public HistoryRecAdapter (Context context ,List<String> historyList, ClickListener clickListener){
         mContext = context;
         mHistoryList = historyList;
+        mClickListener = clickListener;
+    }
+
+    public interface ClickListener{
+        void onClick(View v, int position);
+        void onLongClick(View v);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
@@ -40,6 +47,19 @@ public class HistoryRecAdapter extends RecyclerView.Adapter<HistoryRecAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.title.setText(mHistoryList.get(position));
+        holder.title.setOnClickListener(new View.OnClickListener( ) {
+            @Override
+            public void onClick(View v) {
+                mClickListener.onClick(holder.title,position);
+            }
+        });
+        holder.title.setOnLongClickListener(new View.OnLongClickListener( ) {
+            @Override
+            public boolean onLongClick(View v) {
+                mClickListener.onLongClick(holder.title);
+                return true;
+            }
+        });
     }
 
     @Override

@@ -65,19 +65,31 @@
             android:layout_height="20dp"
             android:background="#f3f3f3"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            />
-        <TextView
+            android:layout_marginBottom="5dp"/>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/black_color"
-            android:text="历史搜索"/>
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/black_color"
+                android:text="历史搜索"/>
+            <TextView
+                android:id="@+id/clear_history_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:layout_marginLeft="200dp"
+                android:text="× 清除全部"
+                android:visibility="gone"/>
+        </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/search_activity_history_recycler"
             android:layout_width="match_parent"
             android:layout_height="100dp"/>
-
     </LinearLayout>
 
 </RelativeLayout>

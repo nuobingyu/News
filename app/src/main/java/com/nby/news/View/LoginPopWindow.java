@@ -17,9 +17,6 @@ import android.widget.Toast;
 
 import com.nby.news.Bean.UserBean;
 import com.nby.news.R;
-import com.nby.news.model.WeatherModel;
-
-import android.os.Handler;
 
 public class LoginPopWindow extends PopupWindow{
 
@@ -52,7 +49,7 @@ public class LoginPopWindow extends PopupWindow{
         //初始化布局
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         assert inflater != null;
-        mView = inflater.inflate(R.layout.view_popwindow_layout,null);
+        mView = inflater.inflate(R.layout.pop_login_layout,null);
         loginText = mView.findViewById(R.id.login_popwindow);
         registerText = mView.findViewById(R.id.zhuce_popwindow);
         frameLayout = mView.findViewById(R.id.pop_frame);
