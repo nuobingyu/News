@@ -24,6 +24,7 @@ import com.nby.news.Interface.OnItemClickListener;
 import com.nby.news.R;
 import com.nby.news.Bean.VideoBean;
 import com.nby.news.Adapter.VideoRecyclerViewAdapter;
+import com.nby.news.db.DBHelper;
 import com.nby.news.model.VideoModel;
 
 import java.util.ArrayList;
@@ -71,6 +72,8 @@ public class VideoFragment extends Fragment implements CompoundButton.OnCheckedC
                 videoBeanList.addAll(dataList);
                 videoDataList.addAll(dataList);
                 mHandler.sendEmptyMessage(201);
+                DBHelper dbHelper =new DBHelper(mContext,"DBHelper",null,1);
+                dbHelper.queryXTable("video",new String[]{"title","url"},"title","");
             }
         });
         onItemClickListener = new OnItemClickListener(){

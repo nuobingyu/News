@@ -27,9 +27,13 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         DBHelper dbHelper = new DBHelper(this,"DBHelper",null,1);
         dbHelper.deleteTable("search");
-//        dbHelper.deleteTable("history");
+        dbHelper.deleteTable("video");
+        //dbHelper.deleteTable("history");
         if(!dbHelper.IsTableExist("search",dbHelper.getWritableDatabase())){
             dbHelper.createTable("create table search(title text,url text)");
+        }
+        if(!dbHelper.IsTableExist("video",dbHelper.getWritableDatabase())){
+            dbHelper.createTable("create table video(title text,url text)");
         }
 
         //清空文件内容
@@ -57,6 +61,11 @@ public class MainActivity extends AppCompatActivity{
 
     public void intentSearchActivity(View view){
         Intent intent = new Intent(MainActivity.this,SearchActivity.class);
+        if(viewPager.getCurrentItem()==0){
+            intent.putExtra("TableName","search");
+        }else if(viewPager.getCurrentItem()==1){
+            intent.putExtra("TableName","video");
+        }
         startActivity(intent);
     }
 

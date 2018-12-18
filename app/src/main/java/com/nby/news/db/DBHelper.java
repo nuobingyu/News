@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class DBHelper extends SQLiteOpenHelper{
     private Map<String,String> dataMap = new HashMap<>();
-    private List<String> historyList = new ArrayList<>();
+    private List<DBDataBean> historyList = new ArrayList<>();
 
     public DBHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -75,7 +75,7 @@ public class DBHelper extends SQLiteOpenHelper{
     public void deleteDate(String tableName,String columnName,Object[] params){
         SQLiteDatabase database;
         String sql = "delete from "+tableName+" where "+columnName+"=?";
-        database = this.getReadableDatabase();
+        database = this.getWritableDatabase();
         database.execSQL(sql,params);
     }
 
@@ -86,8 +86,25 @@ public class DBHelper extends SQLiteOpenHelper{
         database.execSQL(sql);
     }
 
+    public void queryHistoryTable(String tableName ,String[] columnNames,String keyName,String key){
+        SQLiteDatabase database;
+        database = this.getReadableDatabase();
+        Cursor cursor = database.query(tableName
+                ,columnNames
+                ,keyName+" LIKE"+" '%"+key+"%'"
+                ,null
+                ,null
+                ,null
+                ,null);
+            historyList.clear();
+            for(int i =0 ; i< 20&& cursor.moveToNext(); i++){
+                historyList.add(new DBDataBean(cursor.getString(0),cursor.getString(1)));
+                Log.e("query_his",""+cursor.getString(0));
+            }
+    }
+
     @SuppressLint("Recycle")
-    public void queryDate(String tableName,String[] columnNames,String keyName,String s){
+    public void queryXTable(String tableName,String[] columnNames,String keyName,String s){
         SQLiteDatabase database;
         database = this.getReadableDatabase();
         Cursor cursor = database.query(tableName
@@ -98,13 +115,6 @@ public class DBHelper extends SQLiteOpenHelper{
                 ,null
                 ,null);
 
-        if(cursor.getColumnCount()==1){
-            historyList.clear();
-            for(int i =0 ; i< 20&& cursor.moveToNext(); i++){
-               historyList.add(cursor.getString(0));
-               Log.e("query",""+cursor.getString(0));
-            }
-        }
         if(cursor.getColumnCount()==2){
             for(int i =0 ; i< 20&& cursor.moveToNext(); i++){
                 dataMap.put(cursor.getString(0),cursor.getString(1));
@@ -116,14 +126,15 @@ public class DBHelper extends SQLiteOpenHelper{
 
     public Map<String,String> getDataMap(String tableName,String[] columnNames,String keyName,String s){
         if(dataMap.size()<=0){
-            queryDate(tableName,columnNames,keyName,s);
+            queryXTable(tableName,columnNames,keyName,s);
         }
         return dataMap;
     }
 
-    public List<String> getHistoryList(String tableName,String[] columnNames,String keyName,String s){
+    public List<DBDataBean> getHistoryList(String tableName,String[] columnNames,String keyName,String s){
         if(historyList.size()<=0){
-            queryDate(tableName,columnNames,keyName,s);
+            Log.e("getHistoryList"," "+historyList.size());
+            queryHistoryTable(tableName,columnNames,keyName,s);
         }
         return historyList;
     }

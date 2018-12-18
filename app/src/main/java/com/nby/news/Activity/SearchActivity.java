@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.nby.news.Adapter.HintListAdapter;
 import com.nby.news.Adapter.HistoryRecAdapter;
 import com.nby.news.R;
+import com.nby.news.db.DBDataBean;
 import com.nby.news.db.DBHelper;
 import com.nby.news.model.HotSportModel;
 import com.nby.news.unit.SharedPreferencesUnit;
@@ -55,23 +56,22 @@ public class SearchActivity extends Activity{
     private ListView listView;
     private DBHelper dbHelper;
     private Map<String, String> hints = new HashMap<>();
-    private List<String> historyList = new ArrayList<>();
+    private List<DBDataBean> historyList = new ArrayList<>();
     private Context mContext = this;
+    private String tableName = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_layout);
+        Intent intent = getIntent();
+        tableName = intent.getStringExtra("TableName");
+        Log.e("表名",tableName);
         dbHelper = new DBHelper(getApplicationContext()
                 ,"DBHelper",null,1);
-        if(!dbHelper.IsTableExist("history",dbHelper.getWritableDatabase())){
-            dbHelper.createTable("create table history(title text)");
-        }else{
-            historyList = dbHelper.getHistoryList("history",new String[]{"title"}
-            ,"title","");
-        }
         //初始化控件
         clearAllHistoryText = findViewById(R.id.clear_history_text);
+        updateHistory();
         listView = findViewById(R.id.hintList_search);
         search_icon = findViewById(R.id.search_activity_icon);
         searchEditTextView = findViewById(R.id.search_activity_input);
@@ -83,7 +83,6 @@ public class SearchActivity extends Activity{
             public void onClick(View v, int position) {
                 searchEditTextView.setText(((TextView)v).getText());
             }
-
             @Override
             public void onLongClick(View v) {
                 TextView title = (TextView) v;
@@ -95,6 +94,7 @@ public class SearchActivity extends Activity{
                     public void onClick(DialogInterface dialog, int which) {
                         dbHelper.deleteDate("history","title"
                                 ,new String[]{title.getText().toString()});
+                        updateHistory();
                         historyRecAdapter.notifyDataSetChanged();
                     }
                 });
@@ -107,20 +107,15 @@ public class SearchActivity extends Activity{
             }
         });
         recyclerView.setAdapter(historyRecAdapter);
-        if(historyList.size()<=0){
-            clearAllHistoryText.setVisibility(View.GONE);
-        }else{
-            clearAllHistoryText.setVisibility(View.VISIBLE);
-        }
 
-        //获取搜索数据源
-        SharedPreferencesUnit spUnit = new SharedPreferencesUnit(this);
-        spUnit.getNewsBean("News");
         clearAllHistoryText.setOnClickListener(new View.OnClickListener( ) {
             @Override
             public void onClick(View v) {
                 dbHelper.deleteTable("history");
-                dbHelper.createTable("create table history(title text)");
+                dbHelper.createTable("create table history(title text,tag varchar(20))");
+                updateHistory();
+                historyRecAdapter.notifyDataSetChanged();
+                Toast.makeText(getApplicationContext(),"历史记录已清除！",Toast.LENGTH_SHORT).show();
             }
         });
         search_icon.setOnClickListener(new View.OnClickListener( ) {
@@ -135,9 +130,6 @@ public class SearchActivity extends Activity{
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP){
                     Log.e("监听到enter"," ");
-//                    Intent intent = new Intent("android.intent.action.SEARCH");
-//                    intent.putExtra(SearchManager.QUERY,searchEditTextView.getText());
-//                    startActivity(intent);
                     addOneHistoryRecord();
                     return true;
                 }
@@ -160,20 +152,35 @@ public class SearchActivity extends Activity{
                     showList();
                     return;
                 }
-                dbHelper.queryDate("search",new String[]{"title","url"},"title",ss);
-                hints = dbHelper.getDataMap("search",new String[]{"title"},"title",ss);
+                hints = dbHelper.getDataMap(tableName,new String[]{"title","url"},"title",ss);
                 showList();
             }
         });
+    }
+
+    public void updateHistory(){
+        if(!dbHelper.IsTableExist("history",dbHelper.getWritableDatabase())){
+            dbHelper.createTable("create table history(title text,tag varchar(20))");
+        }else{
+            historyList = dbHelper.getHistoryList("history",new String[]{"title","tag"}
+                    ,"tag",tableName);
+        }
+        if(historyList.size()<=0){
+            clearAllHistoryText.setVisibility(View.GONE);
+        }else{
+            clearAllHistoryText.setVisibility(View.VISIBLE);
+        }
     }
 
     public void addOneHistoryRecord(){
         String text = searchEditTextView.getText().toString();
         ContentValues contentValues = new ContentValues();
         contentValues.put("title", text);
+        contentValues.put("tag",tableName);
         dbHelper.getWritableDatabase()
                 .insert("history",null,contentValues);
-        historyList.add(text);
+        historyList.add(new DBDataBean(text,tableName));
+        updateHistory();
         historyRecAdapter.notifyDataSetChanged();
     }
 
@@ -191,5 +198,4 @@ public class SearchActivity extends Activity{
         });
         listView.setAdapter(hintListAdapter);
     }
-
 }

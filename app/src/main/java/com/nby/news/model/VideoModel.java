@@ -1,9 +1,12 @@
 package com.nby.news.model;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 
 import com.nby.news.Bean.VideoBean;
 import com.nby.news.StringPool;
+import com.nby.news.db.DBHelper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,9 +21,14 @@ public class VideoModel {
     private static String mUrl = StringPool.URL_VIDEO;
 
     private Context mContext;
+    private DBHelper dbHelper;
 
     public VideoModel(Context context){
         mContext = context;
+        dbHelper = new DBHelper(context,"DBHelper",null,1);
+        if(!dbHelper.IsTableExist("video",dbHelper.getWritableDatabase())){
+            dbHelper.createTable("create table video(title text,url text)");
+        }
     }
 
     public interface IUpdateVideoModel{
@@ -71,6 +79,11 @@ public class VideoModel {
                             continue;
                         videoBean.setVideo_link(link);
                         videoBeanList.add(videoBean);
+                        ContentValues contentValues =new ContentValues();
+                        contentValues.put("title",title);
+                        contentValues.put("url",link);
+                        dbHelper.getWritableDatabase()
+                                .insert("video",null,contentValues);
                         //new SharedPreferencesUnit(mContext).putBean(videoBean.getTitle(),videoBean);
                     }
                 }

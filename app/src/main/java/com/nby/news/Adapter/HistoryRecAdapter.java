@@ -9,16 +9,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nby.news.R;
+import com.nby.news.db.DBDataBean;
 
 import java.util.List;
 
 public class HistoryRecAdapter extends RecyclerView.Adapter<HistoryRecAdapter.ViewHolder>{
 
-    private List<String> mHistoryList;
+    private List<DBDataBean> mHistoryList;
     private Context mContext;
     private ClickListener mClickListener;
 
-    public HistoryRecAdapter (Context context ,List<String> historyList, ClickListener clickListener){
+    public HistoryRecAdapter (Context context , List<DBDataBean> historyList, ClickListener clickListener){
         mContext = context;
         mHistoryList = historyList;
         mClickListener = clickListener;
@@ -46,7 +47,7 @@ public class HistoryRecAdapter extends RecyclerView.Adapter<HistoryRecAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.title.setText(mHistoryList.get(position));
+        holder.title.setText(mHistoryList.get(position).getTitle());
         holder.title.setOnClickListener(new View.OnClickListener( ) {
             @Override
             public void onClick(View v) {
