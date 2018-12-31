@@ -1,5 +1,6 @@
 package com.nby.news.Fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,10 +14,13 @@ import android.view.ViewGroup;
 import com.nby.news.Adapter.HomeViewPagerAdapter;
 import com.nby.news.R;
 
+import java.util.Objects;
+
 public class HomeFragment extends Fragment{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private Context mContext;
     private HomeViewPagerAdapter adapter;
 
     @Nullable
@@ -25,11 +29,18 @@ public class HomeFragment extends Fragment{
        View view = inflater.inflate(R.layout.fragment_home_layout,container,false);
        tabLayout = view.findViewById(R.id.tablayout_home);
        viewPager = view.findViewById(R.id.viewpager_home);
-       adapter = new HomeViewPagerAdapter(getActivity().getSupportFragmentManager(),getContext());
+       adapter = new HomeViewPagerAdapter(Objects.requireNonNull(getActivity( )).getSupportFragmentManager()
+               ,mContext);
        viewPager.setAdapter(adapter);
        tabLayout.setupWithViewPager(viewPager);
        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
        return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 }

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -19,17 +20,17 @@ import android.os.Message;
 
 public class ShowNewsContentActivity extends Activity{
     @SuppressLint("HandlerLeak")
-    public Handler mHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case 201:
-                    if(webView!=null){
-                        webView.setVisibility(View.VISIBLE);
-                    }
-            }
-        }
-    };
+//    public Handler mHandler = new Handler(){
+//        @Override
+//        public void handleMessage(Message msg) {
+//            switch (msg.what){
+//                case 201:
+//                    if(webView!=null){
+//                        webView.setVisibility(View.VISIBLE);
+//                    }
+//            }
+//        }
+//    };
     public String mUrl;
     public WebView webView;
 
@@ -44,8 +45,10 @@ public class ShowNewsContentActivity extends Activity{
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setAppCacheEnabled(true);
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        webSettings.setSupportZoom(true);
-        webSettings.setUseWideViewPort(true);
+        webSettings.setSupportZoom(true);//支持缩放
+        webSettings.setBuiltInZoomControls(true);//支持内部缩放
+        webSettings.setUseWideViewPort(true);//支持可任意比例缩放
+        webSettings.setLoadsImagesAutomatically(true);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
         webSettings.setDisplayZoomControls(true);
         webSettings.setDefaultFontSize(12);
@@ -58,13 +61,23 @@ public class ShowNewsContentActivity extends Activity{
        // webView.setVisibility(View.GONE);
         webView.loadUrl(mUrl);
        // mHandler.sendEmptyMessageDelayed(201,3000);
+    }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            if(webView.canGoBack()) {
+                webView.goBack();
+                return true;
+            }
+        }
 
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
     protected void onDestroy() {
-
         super.onDestroy( );
+        webView.destroy();
     }
 }

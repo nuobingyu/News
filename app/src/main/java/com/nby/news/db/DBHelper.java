@@ -9,13 +9,31 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 
+import com.nby.news.Interface.DBFinishedInterface;
+
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DBHelper extends SQLiteOpenHelper{
-    private Map<String,String> dataMap = new HashMap<>();
+    private static final int mCapacity = 12;
+    private static DBFinishedInterface dbFinishedInterface;
+
+    public void setDbFinishedInterface(DBFinishedInterface dbFinishedInterface) {
+        this.dbFinishedInterface = dbFinishedInterface;
+    }
+
+    public void removeDbFinishedInterface(){
+        if(this.dbFinishedInterface!=null)
+            dbFinishedInterface = null;
+    }
+
+    private LinkedHashMap<String,String> dataMap = new LinkedHashMap<String,String>(mCapacity,0.75f,true){
+        @Override
+        protected boolean removeEldestEntry(Entry eldest) {
+            return size()>mCapacity;
+        }
+    };
     private List<DBDataBean> historyList = new ArrayList<>();
 
     public DBHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -43,6 +61,14 @@ public class DBHelper extends SQLiteOpenHelper{
             String sql = "drop table "+tableName;
             database.execSQL(sql);
         }
+        onFinish();
+    }
+
+    public void onFinish(){
+        if(dbFinishedInterface!=null){
+            Log.e("onFinish","sql操作完成回调");
+            dbFinishedInterface.onFinish();
+        }
     }
 
     @SuppressLint("Recycle")
@@ -64,19 +90,12 @@ public class DBHelper extends SQLiteOpenHelper{
         return result;
     }
 
-
-    //"insert into search (title) values(?)"
-    public void addOneDate(String sql,Object[] params){
-        SQLiteDatabase database;
-        database = this.getWritableDatabase();
-        database.execSQL(sql,params);
-    }
-
     public void deleteDate(String tableName,String columnName,Object[] params){
         SQLiteDatabase database;
         String sql = "delete from "+tableName+" where "+columnName+"=?";
         database = this.getWritableDatabase();
         database.execSQL(sql,params);
+        onFinish();
     }
 
     public void updateDate(String tableName,String columnName,Object[] params){
@@ -84,6 +103,7 @@ public class DBHelper extends SQLiteOpenHelper{
         String sql = "update "+tableName+" set "+columnName+"=? where "+columnName+"=?";
         database = this.getWritableDatabase();
         database.execSQL(sql);
+        onFinish();
     }
 
     public void queryHistoryTable(String tableName ,String[] columnNames,String keyName,String key){
@@ -97,7 +117,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 ,null
                 ,null);
             historyList.clear();
-            for(int i =0 ; i< 20&& cursor.moveToNext(); i++){
+            for(int i =0 ; i< mCapacity&& cursor.moveToNext(); i++){
                 historyList.add(new DBDataBean(cursor.getString(0),cursor.getString(1)));
                 Log.e("query_his",""+cursor.getString(0));
             }
@@ -116,24 +136,33 @@ public class DBHelper extends SQLiteOpenHelper{
                 ,null);
 
         if(cursor.getColumnCount()==2){
-            for(int i =0 ; i< 20&& cursor.moveToNext(); i++){
+            for(int i =0 ; i< mCapacity&& cursor.moveToNext(); i++){
                 dataMap.put(cursor.getString(0),cursor.getString(1));
-                Log.e("query",""+cursor.getString(0)
-                        +","+cursor.getString(1));
+//                Log.e("query",""+cursor.getString(0)
+//                        +","+cursor.getString(1));
             }
+        }
+        Log.e("query",""+dataMap.size());
+        if(dbFinishedInterface!=null) {
+            dbFinishedInterface.updateHints(dataMap);
         }
     }
 
-    public Map<String,String> getDataMap(String tableName,String[] columnNames,String keyName,String s){
+    public void updateHints(){
+        if(dbFinishedInterface!=null)
+            dbFinishedInterface.updateHints(dataMap);
+    }
+
+    public void onUpdateHints(String tableName,String[] columnNames,String keyName,String s){
         if(dataMap.size()<=0){
             queryXTable(tableName,columnNames,keyName,s);
         }
-        return dataMap;
+        updateHints();
     }
 
     public List<DBDataBean> getHistoryList(String tableName,String[] columnNames,String keyName,String s){
         if(historyList.size()<=0){
-            Log.e("getHistoryList"," "+historyList.size());
+//            Log.e("getHistoryList"," "+historyList.size());
             queryHistoryTable(tableName,columnNames,keyName,s);
         }
         return historyList;

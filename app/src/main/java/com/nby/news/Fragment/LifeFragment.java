@@ -70,6 +70,7 @@ public class LifeFragment extends Fragment{
             }
         });
         refreshLayout = view.findViewById(R.id.life_refresh);
+        refreshLayout.setRefreshing(false);
         lifeModel = new LifeModel(mContext);
         lifeModel.requestLifeDate(new IUpdateNewsData( ) {
             @Override

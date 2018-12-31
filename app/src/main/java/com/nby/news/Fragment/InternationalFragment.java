@@ -70,6 +70,7 @@ public class InternationalFragment extends Fragment{
             }
         });
         refreshLayout = view.findViewById(R.id.international_refresh);
+        refreshLayout.setRefreshing(false);
         return view;
     }
 

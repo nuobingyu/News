@@ -24,5 +24,6 @@
         android:textSize="12sp"
         android:layout_marginTop="2dp"
         android:background="@drawable/bg_num"
-        android:text="6+"/>
+        android:text="6+"
+        android:visibility="gone"/>
 </RelativeLayout>

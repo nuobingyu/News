@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,8 @@ public class HotSpotFragment extends Fragment{
         public void handleMessage(Message msg) {
             switch(msg.what){
                 case 101:
-                    hotSpotListAdapter = new HotSpotListAdapter(mContext,newsBeanList ,new OnItemClickListener( ) {
+                    hotSpotListAdapter = new HotSpotListAdapter(mContext
+                            ,newsBeanList ,new OnItemClickListener( ) {
                         @Override
                         public void onItemClick(View view, int position) {
                             Intent intent = new Intent(getActivity() , ShowNewsContentActivity.class);
@@ -78,6 +80,7 @@ public class HotSpotFragment extends Fragment{
                 for(int i = 0 ; i< 15&&tList.size()>15 ;i++){
                     newsBeanList.add(i,tList.get(i));
                 }
+                Log.e("newsBean",dataList.size()+" ");
                 mHandler.sendEmptyMessage(101);
             }
         });

@@ -65,6 +65,7 @@ public class VideoFragment extends Fragment implements CompoundButton.OnCheckedC
         recyclerView = view.findViewById(R.id.video_recyclerView);
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(manager);
+        DBHelper dbHelper =new DBHelper(mContext,"DBHelper",null,1);
         videoModel = new VideoModel(mContext);
         videoModel.requestVideoDate(new VideoModel.IUpdateVideoModel( ) {
             @Override
@@ -72,7 +73,6 @@ public class VideoFragment extends Fragment implements CompoundButton.OnCheckedC
                 videoBeanList.addAll(dataList);
                 videoDataList.addAll(dataList);
                 mHandler.sendEmptyMessage(201);
-                DBHelper dbHelper =new DBHelper(mContext,"DBHelper",null,1);
                 dbHelper.queryXTable("video",new String[]{"title","url"},"title","");
             }
         });
